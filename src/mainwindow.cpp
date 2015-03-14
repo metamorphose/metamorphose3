@@ -11,10 +11,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     dirModel = new DirModel(this);
+    connect(dirModel, SIGNAL(operationCompleted(QString)),
+            this, SLOT(dirModel_operationCompleted(QString)));
 
     ui->tableView->setModel(dirModel);
+    ui->tableView->resizeColumnsToContents();
 
-    statusBar()->showMessage("Ready");
+    statusBar()->showMessage(tr("Ready"));
 }
 
 MainWindow::~MainWindow()
@@ -42,7 +45,7 @@ void MainWindow::on_actionAbout_triggered()
                      "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
                      "\nSee the GNU General Public License for more details."
                      );
-    aboutBox.setWindowTitle("About Métamorphose");
+    aboutBox.setWindowTitle(tr("About Métamorphose"));
     aboutBox.exec();
 }
 
@@ -59,7 +62,14 @@ void MainWindow::on_addDirButton_clicked()
                       | QFileDialog::ShowDirsOnly
                       | QFileDialog::DontResolveSymlinks);
     if (dialog.exec()) {
-        dirModel->addDirectories(dialog.selectedFiles(), ui->recursiveCheckBox->isChecked());
+
+        dirModel->addDirectories(dialog.selectedFiles(),
+                                 ui->recursiveCheckBox->isChecked(),
+                                 ui->filtersEdit->text().split(" "),
+                                 ui->filesCheckBox->isChecked(),
+                                 ui->foldersCheckBox->isChecked(),
+                                 ui->hiddenCheckBox->isChecked()
+                                 );
     }
 }
 
@@ -69,17 +79,26 @@ void MainWindow::on_addFilesButton_clicked()
     dialog.setFileMode(QFileDialog::ExistingFiles);
     dialog.setOptions(QFileDialog::ReadOnly
                       | QFileDialog::DontResolveSymlinks);
+    dialog.setNameFilter(ui->filtersEdit->text());
     if (dialog.exec()) {
         dirModel->addFiles(dialog.selectedFiles());
     }
 }
 
-void MainWindow::on_resetButton_clicked()
-{
-    dirModel->clear();
-}
-
 void MainWindow::on_renameButton_clicked()
 {
     dirModel->renameItems();
+}
+
+void MainWindow::on_clearAllButton_clicked()
+{
+    dirModel->clear();
+    ui->tableView->resizeColumnsToContents();
+    statusBar()->showMessage(tr("Ready"));
+}
+
+void MainWindow::dirModel_operationCompleted(QString message)
+{
+    statusBar()->showMessage(message);
+    ui->tableView->resizeColumnsToContents();
 }

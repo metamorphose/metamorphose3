@@ -10,7 +10,6 @@ DirItem::~DirItem()
 {
 }
 
-
 DirItem::ItemData DirItem::data() const
 {
     return m_itemData;
@@ -37,7 +36,7 @@ QString DirItem::oldName(const bool &absolute) const
 QString DirItem::newName(const bool &absolute) const
 {
     if (m_itemData.newBaseName.isEmpty()) {
-        return oldName(&absolute);
+        return oldName(absolute);
     }
     QString newName;
     if (!m_itemData.newSuffix.isEmpty()) {

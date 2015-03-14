@@ -102,15 +102,19 @@ void DirModel::addFiles(const QStringList &fileList)
 
     beginInsertRows(parentItem, startSize, endSize - 1);
 
-    for (int i = 0; i < listSize; i++) {
-        addFile(fileList.at(i));
-    }
-    endInsertRows();
-}
+    QElapsedTimer timer;
+    timer.start();
 
-void DirModel::addFile(const QString &file)
-{
-    addFile(QFileInfo(file));
+    for (int i = 0; i < listSize; i++) {
+        addFile(QFileInfo(fileList.at(i)));
+    }
+
+    endInsertRows();
+    int elapsedTime = timer.elapsed();
+    int itemCount = endSize - startSize;
+    qDebug() << "Loaded" << itemCount << "items in" << elapsedTime << "msec";
+    QString message = QString(tr("Loaded %n item(s)", "", itemCount));
+    emit operationCompleted(message);
 }
 
 void DirModel::addFile(const QFileInfo &fileInfo)
@@ -127,32 +131,46 @@ void DirModel::addFile(const QFileInfo &fileInfo)
     dirItems << dirItem;
 }
 
-void DirModel::addDirectories(const QStringList &directoryList, const bool &recursive)
+void DirModel::addDirectories(const QStringList &directoryList,
+                              const bool &recursive,
+                              const QStringList nameFilters,
+                              const bool &files,
+                              const bool &folders,
+                              const bool &hidden)
 {
+    QDir::Filters filter;
+    if (files) {
+        filter = QDir::Files;
+    }
+    if (folders) {
+        filter = filter | QDir::Dirs;
+    }
+    if (hidden) {
+        filter = filter | QDir::Hidden;
+    }
     qDebug() << "Adding" << directoryList.size() << "directories...";
     for (int i = 0; i < directoryList.size(); i++) {
-        addDirectory(directoryList.at(i), recursive);
+        addDirectory(directoryList.at(i), recursive, nameFilters, filter);
     }
 }
 
-bool DirModel::addDirectory(const QString &path, const bool recursive)
+bool DirModel::addDirectory(const QString &path,
+                            const bool recursive,
+                            const QStringList &nameFilters,
+                            const QDir::Filters &filter)
 {
     QDir dir(path);
     if (!dir.exists(path)) {
         qWarning() << QString("Path doesn't exist: %1").arg(path);
         return false;
     }
-
-    QStringList nameFilters;
-    nameFilters << "*";
     dir.setNameFilters(nameFilters);
 
-    QDir::Filters filter = QDir::AllEntries | QDir::NoDotAndDotDot | QDir::Hidden;
-    dir.setFilter(filter);
+    dir.setFilter(filter | QDir::NoDotAndDotDot);
 
     qDebug() << "Opening:" << path;
 
-    QDirIterator::IteratorFlags flags;// = QDirIterator::NoIteratorFlags;
+    QDirIterator::IteratorFlags flags;
     if (recursive) {
         flags = QDirIterator::Subdirectories;
     }
@@ -172,7 +190,10 @@ bool DirModel::addDirectory(const QString &path, const bool recursive)
     endInsertRows();
 
     int elapsedTime = timer.elapsed();
-    qDebug() << "Loaded" << endSize - startSize << "items in" << elapsedTime << "msec";
+    int itemCount = endSize - startSize;
+    qDebug() << "Loaded" << itemCount << "items in" << elapsedTime << "msec";
+    QString message = QString(tr("Loaded %n item(s)", "", itemCount));
+    emit operationCompleted(message);
     return true;
 }
 
@@ -180,11 +201,18 @@ bool DirModel::applyRenamingRules()
 {
     int itemCount = rowCount();
     if (itemCount > 0) {
-        qDebug() << "Apply rules on" << itemCount << "items";
+        qDebug() << "Applying rules on" << itemCount << "items";
+        QElapsedTimer timer;
+        timer.start();
+
         for (int i = 0; i < itemCount; ++i) {
             dirItems.at(i)->rename(i);
         }
+        int elapsedTime = timer.elapsed();
         emit dataChanged(createIndex(-1,0), createIndex(itemCount,columnCount()));
+        qDebug() << "Applyed rules on" << itemCount << "items in" << elapsedTime << "msec";
+        QString message = QString(tr("Applied rules on %n item(s)", "", itemCount));
+        emit operationCompleted(message);
         return true;
     }
     return false;
@@ -195,12 +223,19 @@ bool DirModel::renameItems()
     int itemCount = rowCount();
     if (itemCount > 0) {
         qDebug() << "Renaming" << itemCount << "items";
+        QElapsedTimer timer;
+        timer.start();
+
         QDir d;
         for (int i = 0; i < itemCount; ++i) {
             DirItem dirItem = *dirItems.at(i);
             d.rename(dirItem.oldName(true), dirItem.newName(true));
         }
-        //emit dataChanged(createIndex(-1,0), createIndex(itemCount,columnCount()));
+        int elapsedTime = timer.elapsed();
+        emit dataChanged(createIndex(-1,0), createIndex(itemCount,columnCount()));
+        qDebug() << "Renamed" << itemCount << "items in" << elapsedTime << "msec";
+        QString message = QString(tr("Renamed %n item(s)", "", itemCount));
+        emit operationCompleted(message);
         return true;
     }
     return false;

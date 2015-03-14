@@ -18,19 +18,27 @@ public:
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    bool addDirectory(const QString &path, const bool recursive);
-    void addDirectories(const QStringList &directoryList, const bool &recursive);
+    void addDirectories(const QStringList &directoryList,
+                        const bool &recursive,
+                        const QStringList nameFilters,
+                        const bool &files,
+                        const bool &folders,
+                        const bool &hidden);
     void addFiles(const QStringList &fileList);
-    void addFile(const QString &file);
-
-public slots:
     bool applyRenamingRules();
     bool renameItems();
     void clear();
 
+signals:
+    void operationCompleted(QString message);
+
 protected:
     QModelIndex parentItem;
     void addFile(const QFileInfo &fileInfo);
+    bool addDirectory(const QString &path,
+                      const bool recursive,
+                      const QStringList &nameFilters,
+                      const QDir::Filters &filter);
 
 private:
     QList<DirItem*> dirItems;

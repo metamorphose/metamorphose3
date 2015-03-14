@@ -22,9 +22,10 @@ private slots:
     void on_previewButton_clicked();
     void on_addDirButton_clicked();
     void on_addFilesButton_clicked();
-    void on_resetButton_clicked();
-
     void on_renameButton_clicked();
+    void on_clearAllButton_clicked();
+
+    void dirModel_operationCompleted(QString message);
 
 private:
     Ui::MainWindow *ui;
