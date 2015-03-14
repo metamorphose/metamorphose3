@@ -1,5 +1,9 @@
-# C++ objects and libs
+# OS
+.directory
+.DS_Store
+*-swp
 
+# C++ objects and libs
 *.slo
 *.lo
 *.o
@@ -10,8 +14,27 @@
 *.dll
 *.dylib
 
-# Qt-es
+# Netbeans / Eclipse
+nbproject/
+*.project
+.nbrun
 
+# JetBrains
+.idea/
+*.ipr
+*.iws
+*.iml
+
+# VIm
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
+
+
+# Qt-es
 /.qmake.cache
 /.qmake.stash
 *.pro.user
@@ -24,7 +47,6 @@ Makefile*
 *-build-*
 
 # QtCreator
-
 *.autosave
 
 #QtCtreator Qml
