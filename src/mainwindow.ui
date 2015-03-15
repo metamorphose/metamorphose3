@@ -23,6 +23,21 @@
       <height>211</height>
      </rect>
     </property>
+    <property name="sizeAdjustPolicy">
+     <enum>QAbstractScrollArea::AdjustIgnored</enum>
+    </property>
+    <property name="showDropIndicator" stdset="0">
+     <bool>false</bool>
+    </property>
+    <property name="dragEnabled">
+     <bool>false</bool>
+    </property>
+    <property name="dragDropMode">
+     <enum>QAbstractItemView::NoDragDrop</enum>
+    </property>
+    <property name="defaultDropAction">
+     <enum>Qt::MoveAction</enum>
+    </property>
     <property name="alternatingRowColors">
      <bool>true</bool>
     </property>
@@ -31,6 +46,9 @@
     </property>
     <property name="selectionBehavior">
      <enum>QAbstractItemView::SelectRows</enum>
+    </property>
+    <property name="sortingEnabled">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="previewButton">
@@ -85,7 +103,7 @@
      <string>Add Directory</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="recursiveCheckBox">
+   <widget class="QCheckBox" name="addRecursive">
     <property name="geometry">
      <rect>
       <x>135</x>
@@ -132,7 +150,7 @@
      </iconset>
     </property>
    </widget>
-   <widget class="QLineEdit" name="filtersEdit">
+   <widget class="QLineEdit" name="filterNames">
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -148,7 +166,7 @@
      <string>*</string>
     </property>
    </widget>
-   <widget class="QLabel" name="filterLabel">
+   <widget class="QLabel" name="filterNamesLabel">
     <property name="geometry">
      <rect>
       <x>235</x>
@@ -161,7 +179,7 @@
      <string>Filters:</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="filesCheckBox">
+   <widget class="QCheckBox" name="filterIncludeFiles">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -180,7 +198,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QCheckBox" name="foldersCheckBox">
+   <widget class="QCheckBox" name="filterIncludeDirs">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -220,7 +238,7 @@
      </iconset>
     </property>
    </widget>
-   <widget class="QCheckBox" name="hiddenCheckBox">
+   <widget class="QCheckBox" name="filterIncludeHidden">
     <property name="geometry">
      <rect>
       <x>570</x>
@@ -234,6 +252,51 @@
     </property>
     <property name="text">
      <string>Hidden</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="sortButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>80</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Sort</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="sortAscending">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>100</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Ascending</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="sortDescending">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>100</y>
+      <width>101</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Descending</string>
     </property>
    </widget>
   </widget>

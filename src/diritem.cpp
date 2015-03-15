@@ -62,3 +62,15 @@ bool DirItem::rename(const long &index)
     m_itemData.newSuffix = m_itemData.completeSuffix;
     return true;
 }
+
+bool DirItem::itemCompare(DirItem *i, DirItem *j, Qt::SortOrder order)
+{
+    int compare = i->oldName(true).localeAwareCompare(j->oldName(true));
+    if (order == Qt::AscendingOrder && compare < 0) {
+        return true;
+    }
+    if (order == Qt::DescendingOrder && compare > 0) {
+        return true;
+    }
+    return false;
+}

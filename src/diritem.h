@@ -21,6 +21,7 @@ public:
     QString oldName(const bool &absolute = false) const;
     QString newName(const bool &absolute = false) const;
     bool rename(const long &index);
+    static bool itemCompare(DirItem *i, DirItem *j, Qt::SortOrder order);
 
 private:
     DirItem::ItemData m_itemData;

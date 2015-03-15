@@ -64,11 +64,11 @@ void MainWindow::on_addDirButton_clicked()
     if (dialog.exec()) {
 
         dirModel->addDirectories(dialog.selectedFiles(),
-                                 ui->recursiveCheckBox->isChecked(),
-                                 ui->filtersEdit->text().split(" "),
-                                 ui->filesCheckBox->isChecked(),
-                                 ui->foldersCheckBox->isChecked(),
-                                 ui->hiddenCheckBox->isChecked()
+                                 ui->addRecursive->isChecked(),
+                                 ui->filterNames->text().split(" "),
+                                 ui->filterIncludeFiles->isChecked(),
+                                 ui->filterIncludeDirs->isChecked(),
+                                 ui->filterIncludeHidden->isChecked()
                                  );
     }
 }
@@ -79,7 +79,7 @@ void MainWindow::on_addFilesButton_clicked()
     dialog.setFileMode(QFileDialog::ExistingFiles);
     dialog.setOptions(QFileDialog::ReadOnly
                       | QFileDialog::DontResolveSymlinks);
-    dialog.setNameFilter(ui->filtersEdit->text());
+    dialog.setNameFilter(ui->filterNames->text());
     if (dialog.exec()) {
         dirModel->addFiles(dialog.selectedFiles());
     }
@@ -99,6 +99,20 @@ void MainWindow::on_clearAllButton_clicked()
 
 void MainWindow::dirModel_operationCompleted(QString message)
 {
-    statusBar()->showMessage(message);
+    if (!message.isEmpty()) {
+        statusBar()->showMessage(message);
+    }
     ui->tableView->resizeColumnsToContents();
+}
+
+void MainWindow::on_sortButton_clicked()
+{
+    Qt::SortOrder order;
+    if (ui->sortAscending->isChecked()) {
+        order = Qt::AscendingOrder;
+    }
+    else {
+        order = Qt::DescendingOrder;
+    }
+    dirModel->sort(0, order);
 }

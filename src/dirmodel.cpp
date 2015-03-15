@@ -1,6 +1,7 @@
 #include <QtCore/QtDebug>
 #include <QtCore/QDir>
 #include <QtCore/QDirIterator>
+#include <QtGui/QIcon>
 #include "dirmodel.h"
 
 DirModel::DirModel(QObject *parent)
@@ -14,12 +15,20 @@ DirModel::~DirModel()
     qDeleteAll(dirItems);
 }
 
-int DirModel::columnCount(const QModelIndex &parent) const
+Qt::ItemFlags DirModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid()) {
+        return Qt::NoItemFlags;
+    }
+    return Qt::ItemIsEnabled | Qt::ItemNeverHasChildren | Qt::ItemIsSelectable;
+}
+
+int DirModel::columnCount(const QModelIndex &parent __attribute__ ((unused))) const
 {
     return 3;
 }
 
-int DirModel::rowCount(const QModelIndex &parent) const
+int DirModel::rowCount(const QModelIndex &parent __attribute__ ((unused))) const
 {
     return dirItems.size();
 }
@@ -34,7 +43,7 @@ QVariant DirModel::data(const QModelIndex &index, int role) const
         DirItem *item = dirItems.at(index.row());
         data = item->data().absolutePath;
     }
-    else if (role == Qt::DisplayRole) {
+    else if (role == Qt::DisplayRole || role == Qt::EditRole) {
         DirItem *item = dirItems.at(index.row());
         switch (index.column()) {
         case 0:
@@ -49,6 +58,14 @@ QVariant DirModel::data(const QModelIndex &index, int role) const
         default:
             break;
         }
+    }
+    // TODO: there should be no GUI code in this class
+    if (role == Qt::DecorationRole && index.column() == 0) {
+        DirItem *item = dirItems.at(index.row());
+        if (item->data().isDir) {
+            return QIcon::fromTheme("folder");
+        }
+        return QIcon::fromTheme("text-x-generic");
     }
     //qDebug() << "item:" << data;
     return data;
@@ -197,46 +214,79 @@ bool DirModel::addDirectory(const QString &path,
     return true;
 }
 
+bool itemCompareAsc(DirItem *i, DirItem *j)
+{
+    return DirItem::itemCompare(i, j, Qt::AscendingOrder);
+}
+bool itemCompareDesc(DirItem *i, DirItem *j)
+{
+    return DirItem::itemCompare(i, j, Qt::DescendingOrder);
+}
+
+void DirModel::sort(int column, Qt::SortOrder order)
+{
+    int itemCount = rowCount();
+    if (itemCount == 0) {
+        return;
+    }
+
+    QElapsedTimer timer;
+    timer.start();
+
+    if (order == Qt::AscendingOrder) {
+        std::sort(dirItems.begin(), dirItems.end(), itemCompareAsc);
+    }
+    else {
+        std::sort(dirItems.begin(), dirItems.end(), itemCompareDesc);
+    }
+
+    int elapsedTime = timer.elapsed();
+    emit dataChanged(createIndex(-1,0), createIndex(itemCount,columnCount()));
+    qDebug() << "Sorted" << itemCount << "items in" << elapsedTime << "msec";
+    QString message = QString(tr("Sorted %n item(s)", "", itemCount));
+    emit operationCompleted(message);
+}
+
 bool DirModel::applyRenamingRules()
 {
     int itemCount = rowCount();
-    if (itemCount > 0) {
-        qDebug() << "Applying rules on" << itemCount << "items";
-        QElapsedTimer timer;
-        timer.start();
-
-        for (int i = 0; i < itemCount; ++i) {
-            dirItems.at(i)->rename(i);
-        }
-        int elapsedTime = timer.elapsed();
-        emit dataChanged(createIndex(-1,0), createIndex(itemCount,columnCount()));
-        qDebug() << "Applyed rules on" << itemCount << "items in" << elapsedTime << "msec";
-        QString message = QString(tr("Applied rules on %n item(s)", "", itemCount));
-        emit operationCompleted(message);
-        return true;
+    if (itemCount == 0) {
+        return false;
     }
-    return false;
+    qDebug() << "Applying rules on" << itemCount << "items";
+    QElapsedTimer timer;
+    timer.start();
+
+    for (int i = 0; i < itemCount; ++i) {
+        dirItems.at(i)->rename(i);
+    }
+    int elapsedTime = timer.elapsed();
+    emit dataChanged(createIndex(-1,0), createIndex(itemCount,columnCount()));
+    qDebug() << "Applyed rules on" << itemCount << "items in" << elapsedTime << "msec";
+    QString message = QString(tr("Applied rules on %n item(s)", "", itemCount));
+    emit operationCompleted(message);
+    return true;
 }
 
 bool DirModel::renameItems()
 {
     int itemCount = rowCount();
-    if (itemCount > 0) {
-        qDebug() << "Renaming" << itemCount << "items";
-        QElapsedTimer timer;
-        timer.start();
-
-        QDir d;
-        for (int i = 0; i < itemCount; ++i) {
-            DirItem dirItem = *dirItems.at(i);
-            d.rename(dirItem.oldName(true), dirItem.newName(true));
-        }
-        int elapsedTime = timer.elapsed();
-        emit dataChanged(createIndex(-1,0), createIndex(itemCount,columnCount()));
-        qDebug() << "Renamed" << itemCount << "items in" << elapsedTime << "msec";
-        QString message = QString(tr("Renamed %n item(s)", "", itemCount));
-        emit operationCompleted(message);
-        return true;
+    if (itemCount == 0) {
+        return false;
     }
-    return false;
+    qDebug() << "Renaming" << itemCount << "items";
+    QElapsedTimer timer;
+    timer.start();
+
+    QDir d;
+    for (int i = 0; i < itemCount; ++i) {
+        DirItem dirItem = *dirItems.at(i);
+        d.rename(dirItem.oldName(true), dirItem.newName(true));
+    }
+    int elapsedTime = timer.elapsed();
+    emit dataChanged(createIndex(-1,0), createIndex(itemCount,columnCount()));
+    qDebug() << "Renamed" << itemCount << "items in" << elapsedTime << "msec";
+    QString message = QString(tr("Renamed %n item(s)", "", itemCount));
+    emit operationCompleted(message);
+    return true;
 }

@@ -27,6 +27,8 @@ private slots:
 
     void dirModel_operationCompleted(QString message);
 
+    void on_sortButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     DirModel* dirModel;
