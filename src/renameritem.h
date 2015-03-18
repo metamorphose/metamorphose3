@@ -2,7 +2,7 @@
 #define DIRITEM_H
 #include <QtCore>
 
-class DirItem
+class RenamerItem
 {
 public:
     struct ItemData {
@@ -14,17 +14,17 @@ public:
       QString newSuffix;
     };
 
-    explicit DirItem(const ItemData &itemData);
-    ~DirItem();
+    explicit RenamerItem(const ItemData &itemData);
+    ~RenamerItem();
 
     ItemData data() const;
     QString oldName(const bool &absolute = false) const;
     QString newName(const bool &absolute = false) const;
     bool rename(const long &index);
-    static bool itemCompare(DirItem *i, DirItem *j, Qt::SortOrder order);
+    static bool itemCompare(RenamerItem *i, RenamerItem *j, Qt::SortOrder order);
 
 private:
-    DirItem::ItemData m_itemData;
+    RenamerItem::ItemData m_itemData;
 };
 
 #endif // DIRITEM_H

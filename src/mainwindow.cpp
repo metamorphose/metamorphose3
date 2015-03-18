@@ -1,5 +1,6 @@
+#include <QtCore/QtDebug>
 #include <QtWidgets/QMessageBox>
-#include <QFileDialog>
+#include <QtWidgets/QFileDialog>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -10,19 +11,26 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    dirModel = new DirModel(this);
-    connect(dirModel, SIGNAL(operationCompleted(QString)),
-            this, SLOT(dirModel_operationCompleted(QString)));
-
-    ui->tableView->setModel(dirModel);
-    ui->tableView->resizeColumnsToContents();
-
     statusBar()->showMessage(tr("Ready"));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::setRenamerModel(RenamerModel *model)
+{
+    m_renamerModel = model;
+    connect(m_renamerModel, SIGNAL(operationCompleted(QString)),
+            this, SLOT(dirModel_operationCompleted(QString)));
+
+    ui->tableView->setModel(m_renamerModel);
+    ui->tableView->resizeColumnsToContents();
+
+    SelectionParams *selectionParams = new SelectionParams();
+    selectionParams->setRenamerModel(m_renamerModel);
+    ui->mainTabWidget->insertTab(0, selectionParams, tr("Selection"));
 }
 
 void MainWindow::on_actionQuit_triggered()
@@ -51,48 +59,17 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_previewButton_clicked()
 {
-    dirModel->applyRenamingRules();
-}
-
-void MainWindow::on_addDirButton_clicked()
-{
-    QFileDialog dialog(this);
-    dialog.setFileMode(QFileDialog::Directory);
-    dialog.setOptions(QFileDialog::ReadOnly
-                      | QFileDialog::ShowDirsOnly
-                      | QFileDialog::DontResolveSymlinks);
-    if (dialog.exec()) {
-
-        dirModel->addDirectories(dialog.selectedFiles(),
-                                 ui->addRecursive->isChecked(),
-                                 ui->filterNames->text().split(" "),
-                                 ui->filterIncludeFiles->isChecked(),
-                                 ui->filterIncludeDirs->isChecked(),
-                                 ui->filterIncludeHidden->isChecked()
-                                 );
-    }
-}
-
-void MainWindow::on_addFilesButton_clicked()
-{
-    QFileDialog dialog(this);
-    dialog.setFileMode(QFileDialog::ExistingFiles);
-    dialog.setOptions(QFileDialog::ReadOnly
-                      | QFileDialog::DontResolveSymlinks);
-    dialog.setNameFilter(ui->filterNames->text());
-    if (dialog.exec()) {
-        dirModel->addFiles(dialog.selectedFiles());
-    }
+    m_renamerModel->applyRenamingRules();
 }
 
 void MainWindow::on_renameButton_clicked()
 {
-    dirModel->renameItems();
+    m_renamerModel->renameItems();
 }
 
 void MainWindow::on_clearAllButton_clicked()
 {
-    dirModel->clear();
+    m_renamerModel->clear();
     ui->tableView->resizeColumnsToContents();
     statusBar()->showMessage(tr("Ready"));
 }
@@ -105,14 +82,3 @@ void MainWindow::dirModel_operationCompleted(QString message)
     ui->tableView->resizeColumnsToContents();
 }
 
-void MainWindow::on_sortButton_clicked()
-{
-    Qt::SortOrder order;
-    if (ui->sortAscending->isChecked()) {
-        order = Qt::AscendingOrder;
-    }
-    else {
-        order = Qt::DescendingOrder;
-    }
-    dirModel->sort(0, order);
-}

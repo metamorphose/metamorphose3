@@ -1,15 +1,15 @@
 #ifndef DIRMODEL
 #define DIRMODEL
 #include <QtCore/QAbstractTableModel>
-#include "diritem.h"
+#include "renameritem.h"
 
-class DirModel : public QAbstractTableModel
+class RenamerModel : public QAbstractTableModel
 {
     Q_OBJECT
 
 public:
-    explicit DirModel(QObject *parent = 0);
-    ~DirModel();
+    explicit RenamerModel(QObject *parent = 0);
+    ~RenamerModel();
 
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index,
@@ -44,7 +44,7 @@ protected:
 
 
 private:
-    QList<DirItem*> dirItems;
+    QList<RenamerItem*> dirItems;
     QLocale locale;
 };
 

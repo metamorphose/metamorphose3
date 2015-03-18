@@ -1,21 +1,21 @@
 #include <QtCore/QtDebug>
-#include "diritem.h"
+#include "renameritem.h"
 
-DirItem::DirItem(const DirItem::ItemData &data)
+RenamerItem::RenamerItem(const RenamerItem::ItemData &data)
 {
     m_itemData = data;
 }
 
-DirItem::~DirItem()
+RenamerItem::~RenamerItem()
 {
 }
 
-DirItem::ItemData DirItem::data() const
+RenamerItem::ItemData RenamerItem::data() const
 {
     return m_itemData;
 }
 
-QString DirItem::oldName(const bool &absolute) const
+QString RenamerItem::oldName(const bool &absolute) const
 {
     QString oldName;
     if (!m_itemData.completeSuffix.isEmpty()) {
@@ -33,7 +33,7 @@ QString DirItem::oldName(const bool &absolute) const
     return oldName;
 }
 
-QString DirItem::newName(const bool &absolute) const
+QString RenamerItem::newName(const bool &absolute) const
 {
     if (m_itemData.newBaseName.isEmpty()) {
         return oldName(absolute);
@@ -54,7 +54,7 @@ QString DirItem::newName(const bool &absolute) const
     return newName;
 }
 
-bool DirItem::rename(const long &index)
+bool RenamerItem::rename(const long &index)
 {
     m_itemData.newBaseName = QString("%1_new_%2")
             .arg(index + 1, 3, 10, QChar('0'))
@@ -63,8 +63,11 @@ bool DirItem::rename(const long &index)
     return true;
 }
 
-bool DirItem::itemCompare(DirItem *i, DirItem *j, Qt::SortOrder order)
+bool RenamerItem::itemCompare(RenamerItem *i, RenamerItem *j, Qt::SortOrder order)
 {
+    if (i->data().isDir != j->data().isDir) {
+        return i->data().isDir;
+    }
     int compare = i->oldName(true).localeAwareCompare(j->oldName(true));
     if (order == Qt::AscendingOrder && compare < 0) {
         return true;

@@ -2,20 +2,20 @@
 #include <QtCore/QDir>
 #include <QtCore/QDirIterator>
 #include <QtGui/QIcon>
-#include "dirmodel.h"
+#include "renamermodel.h"
 
-DirModel::DirModel(QObject *parent)
+RenamerModel::RenamerModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
     clear();
 }
 
-DirModel::~DirModel()
+RenamerModel::~RenamerModel()
 {
     qDeleteAll(dirItems);
 }
 
-Qt::ItemFlags DirModel::flags(const QModelIndex &index) const
+Qt::ItemFlags RenamerModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid()) {
         return Qt::NoItemFlags;
@@ -23,28 +23,28 @@ Qt::ItemFlags DirModel::flags(const QModelIndex &index) const
     return Qt::ItemIsEnabled | Qt::ItemNeverHasChildren | Qt::ItemIsSelectable;
 }
 
-int DirModel::columnCount(const QModelIndex &parent __attribute__ ((unused))) const
+int RenamerModel::columnCount(const QModelIndex &parent __attribute__ ((unused))) const
 {
     return 3;
 }
 
-int DirModel::rowCount(const QModelIndex &parent __attribute__ ((unused))) const
+int RenamerModel::rowCount(const QModelIndex &parent __attribute__ ((unused))) const
 {
     return dirItems.size();
 }
 
-QVariant DirModel::data(const QModelIndex &index, int role) const
+QVariant RenamerModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
         return QVariant();
     }
     QVariant data;
     if (role == Qt::ToolTipRole) {
-        DirItem *item = dirItems.at(index.row());
+        RenamerItem *item = dirItems.at(index.row());
         data = item->data().absolutePath;
     }
     else if (role == Qt::DisplayRole || role == Qt::EditRole) {
-        DirItem *item = dirItems.at(index.row());
+        RenamerItem *item = dirItems.at(index.row());
         switch (index.column()) {
         case 0:
             data = item->data().absolutePath;
@@ -61,7 +61,7 @@ QVariant DirModel::data(const QModelIndex &index, int role) const
     }
     // TODO: there should be no GUI code in this class
     if (role == Qt::DecorationRole && index.column() == 0) {
-        DirItem *item = dirItems.at(index.row());
+        RenamerItem *item = dirItems.at(index.row());
         if (item->data().isDir) {
             return QIcon::fromTheme("folder");
         }
@@ -71,7 +71,7 @@ QVariant DirModel::data(const QModelIndex &index, int role) const
     return data;
 }
 
-QVariant DirModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant RenamerModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role != Qt::DisplayRole) {
         return QVariant();
@@ -99,7 +99,7 @@ QVariant DirModel::headerData(int section, Qt::Orientation orientation, int role
     return QVariant();
 }
 
-void DirModel::clear()
+void RenamerModel::clear()
 {
     if (!dirItems.isEmpty()) {
         beginResetModel();
@@ -109,7 +109,7 @@ void DirModel::clear()
     }
 }
 
-void DirModel::addFiles(const QStringList &fileList)
+void RenamerModel::addFiles(const QStringList &fileList)
 {
     int startSize = dirItems.size();
     int listSize = fileList.size();
@@ -134,21 +134,21 @@ void DirModel::addFiles(const QStringList &fileList)
     emit operationCompleted(message);
 }
 
-void DirModel::addFile(const QFileInfo &fileInfo)
+void RenamerModel::addFile(const QFileInfo &fileInfo)
 {
     //qDebug() << "file:" << fileInfo.fileName();
 
-    DirItem::ItemData itemData;
+    RenamerItem::ItemData itemData;
     itemData.absolutePath = fileInfo.absolutePath();
     itemData.completeBaseName = fileInfo.completeBaseName();
     itemData.completeSuffix = fileInfo.completeSuffix();
     itemData.isDir = fileInfo.isDir();
 
-    DirItem *dirItem = new DirItem(itemData);
+    RenamerItem *dirItem = new RenamerItem(itemData);
     dirItems << dirItem;
 }
 
-void DirModel::addDirectories(const QStringList &directoryList,
+void RenamerModel::addDirectories(const QStringList &directoryList,
                               const bool &recursive,
                               const QStringList nameFilters,
                               const bool &files,
@@ -171,7 +171,7 @@ void DirModel::addDirectories(const QStringList &directoryList,
     }
 }
 
-bool DirModel::addDirectory(const QString &path,
+bool RenamerModel::addDirectory(const QString &path,
                             const bool recursive,
                             const QStringList &nameFilters,
                             const QDir::Filters &filter)
@@ -214,16 +214,16 @@ bool DirModel::addDirectory(const QString &path,
     return true;
 }
 
-bool itemCompareAsc(DirItem *i, DirItem *j)
+bool itemCompareAsc(RenamerItem *i, RenamerItem *j)
 {
-    return DirItem::itemCompare(i, j, Qt::AscendingOrder);
+    return RenamerItem::itemCompare(i, j, Qt::AscendingOrder);
 }
-bool itemCompareDesc(DirItem *i, DirItem *j)
+bool itemCompareDesc(RenamerItem *i, RenamerItem *j)
 {
-    return DirItem::itemCompare(i, j, Qt::DescendingOrder);
+    return RenamerItem::itemCompare(i, j, Qt::DescendingOrder);
 }
 
-void DirModel::sort(int column, Qt::SortOrder order)
+void RenamerModel::sort(int column, Qt::SortOrder order)
 {
     int itemCount = rowCount();
     if (itemCount == 0) {
@@ -247,7 +247,7 @@ void DirModel::sort(int column, Qt::SortOrder order)
     emit operationCompleted(message);
 }
 
-bool DirModel::applyRenamingRules()
+bool RenamerModel::applyRenamingRules()
 {
     int itemCount = rowCount();
     if (itemCount == 0) {
@@ -268,7 +268,7 @@ bool DirModel::applyRenamingRules()
     return true;
 }
 
-bool DirModel::renameItems()
+bool RenamerModel::renameItems()
 {
     int itemCount = rowCount();
     if (itemCount == 0) {
@@ -280,7 +280,7 @@ bool DirModel::renameItems()
 
     QDir d;
     for (int i = 0; i < itemCount; ++i) {
-        DirItem dirItem = *dirItems.at(i);
+        RenamerItem dirItem = *dirItems.at(i);
         d.rename(dirItem.oldName(true), dirItem.newName(true));
     }
     int elapsedTime = timer.elapsed();
