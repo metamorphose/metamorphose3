@@ -5,11 +5,27 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
+#include "selectionform.h"
+#include "operationsform.h"
+
+MainWindow::MainWindow(RenamerModel *renamerModel, OperationModel *operationModel,
+                       QWidget *parent) : QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    m_renamerModel = renamerModel;
+    connect(m_renamerModel, SIGNAL(operationCompleted(QString)),
+            this, SLOT(dirModel_operationCompleted(QString)));
+
     ui->setupUi(this);
+
+    ui->tableView->setModel(m_renamerModel);
+    ui->tableView->resizeColumnsToContents();
+
+    SelectionForm *selectionForm = new SelectionForm(m_renamerModel);
+    ui->mainTabWidget->addTab(selectionForm, tr("Selection"));
+
+    OperationsForm *operationsForm = new OperationsForm(operationModel);
+    ui->mainTabWidget->addTab(operationsForm, tr("Renaming"));
 
     statusBar()->showMessage(tr("Ready"));
 }
@@ -17,20 +33,6 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-void MainWindow::setRenamerModel(RenamerModel *model)
-{
-    m_renamerModel = model;
-    connect(m_renamerModel, SIGNAL(operationCompleted(QString)),
-            this, SLOT(dirModel_operationCompleted(QString)));
-
-    ui->tableView->setModel(m_renamerModel);
-    ui->tableView->resizeColumnsToContents();
-
-    SelectionParams *selectionParams = new SelectionParams();
-    selectionParams->setRenamerModel(m_renamerModel);
-    ui->mainTabWidget->insertTab(0, selectionParams, tr("Selection"));
 }
 
 void MainWindow::on_actionQuit_triggered()

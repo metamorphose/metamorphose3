@@ -80,13 +80,13 @@ QVariant RenamerModel::headerData(int section, Qt::Orientation orientation, int 
         QString header;
         switch (section) {
         case 0:
-            header = QString("Location");
+            header = tr("Location");
             break;
         case 1:
-            header = QString("Original Name");
+            header = tr("Original Name");
             break;
         case 2:
-            header = QString("New Name");
+            header = tr("New Name");
             break;
         default:
             break;
@@ -130,7 +130,7 @@ void RenamerModel::addFiles(const QStringList &fileList)
     int elapsedTime = timer.elapsed();
     int itemCount = endSize - startSize;
     qDebug() << "Loaded" << itemCount << "items in" << elapsedTime << "msec";
-    QString message = QString(tr("Loaded %n item(s)", "", itemCount));
+    QString message = tr("Loaded %n item(s)", "", itemCount);
     emit operationCompleted(message);
 }
 
@@ -263,7 +263,7 @@ bool RenamerModel::applyRenamingRules()
     int elapsedTime = timer.elapsed();
     emit dataChanged(createIndex(-1,0), createIndex(itemCount,columnCount()));
     qDebug() << "Applyed rules on" << itemCount << "items in" << elapsedTime << "msec";
-    QString message = QString(tr("Applied rules on %n item(s)", "", itemCount));
+    QString message = tr("Applied rules on %n item(s)", "", itemCount);
     emit operationCompleted(message);
     return true;
 }
@@ -286,7 +286,7 @@ bool RenamerModel::renameItems()
     int elapsedTime = timer.elapsed();
     emit dataChanged(createIndex(-1,0), createIndex(itemCount,columnCount()));
     qDebug() << "Renamed" << itemCount << "items in" << elapsedTime << "msec";
-    QString message = QString(tr("Renamed %n item(s)", "", itemCount));
+    QString message = tr("Renamed %n item(s)", "", itemCount);
     emit operationCompleted(message);
     return true;
 }

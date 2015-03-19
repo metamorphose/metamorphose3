@@ -15,16 +15,21 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     diritem.cpp \
-    selectionparams.cpp \
     renamermodel.cpp \
-    operation/insert.cpp
+    operationsform.cpp \
+    operation/insertform.cpp \
+    selectionform.cpp \
+    operationmodel.cpp
 
 HEADERS  += mainwindow.h \
-    selectionparams.h \
     renamermodel.h \
     renameritem.h \
-    operation/insert.h
+    operationsform.h \
+    operation/insertform.h \
+    selectionform.h \
+    operationmodel.h
 
 FORMS    += mainwindow.ui \
-    selectionparams.ui \
-    operation/insert.ui
+    operationsform.ui \
+    operation/insertform.ui \
+    selectionform.ui

@@ -1,27 +1,23 @@
 #include <QtCore/QtDebug>
 #include <QtWidgets/QFileDialog>
 
-#include "selectionparams.h"
-#include "ui_selectionparams.h"
+#include "selectionform.h"
+#include "ui_selectionform.h"
 
-SelectionParams::SelectionParams(QWidget *parent) :
+SelectionForm::SelectionForm(RenamerModel *model, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::SelectionParams)
+    ui(new Ui::SelectionForm)
 {
+    m_renamerModel = model;
     ui->setupUi(this);
 }
 
-SelectionParams::~SelectionParams()
+SelectionForm::~SelectionForm()
 {
     delete ui;
 }
 
-void SelectionParams::setRenamerModel(RenamerModel *model)
-{
-    m_renamerModel = model;
-}
-
-void SelectionParams::on_addDirButton_clicked()
+void SelectionForm::on_addDirButton_clicked()
 {
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::Directory);
@@ -39,7 +35,7 @@ void SelectionParams::on_addDirButton_clicked()
     }
 }
 
-void SelectionParams::on_addFilesButton_clicked()
+void SelectionForm::on_addFilesButton_clicked()
 {
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::ExistingFiles);
@@ -51,7 +47,7 @@ void SelectionParams::on_addFilesButton_clicked()
     }
 }
 
-void SelectionParams::on_sortButton_clicked()
+void SelectionForm::on_sortButton_clicked()
 {
     Qt::SortOrder order;
     if (ui->sortAscending->isChecked()) {

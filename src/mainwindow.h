@@ -3,8 +3,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "renamermodel.h"
-#include "selectionparams.h"
-#include "operation/insert.h"
+#include "operationmodel.h"
 
 namespace Ui {
 class MainWindow;
@@ -15,7 +14,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(RenamerModel *renamerModel,
+                        OperationModel *operationModel,
+                        QWidget *parent = 0);
     ~MainWindow();
     void setRenamerModel(RenamerModel *model);
 
@@ -29,7 +30,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    RenamerModel* m_renamerModel;
+    RenamerModel *m_renamerModel;
+    OperationModel *m_operationModel;
 };
 
 #endif // MAINWINDOW_H

@@ -4,8 +4,7 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    MainWindow window;
-    window.setRenamerModel(new RenamerModel());
+    MainWindow window(new RenamerModel(), new OperationModel());
     window.show();
 
     return app.exec();
