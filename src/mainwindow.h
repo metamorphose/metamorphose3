@@ -2,8 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QtWidgets/QMainWindow>
-#include "renamermodel.h"
-#include "operationmodel.h"
+#include "core/renamermodel.h"
+#include "operationformmodel.h"
 
 namespace Ui {
 class MainWindow;
@@ -15,7 +15,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(RenamerModel *renamerModel,
-                        OperationModel *operationModel,
+                        OperationFormModel *operationFormModel,
                         QWidget *parent = 0);
     ~MainWindow();
     void setRenamerModel(RenamerModel *model);
@@ -31,7 +31,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     RenamerModel *m_renamerModel;
-    OperationModel *m_operationModel;
+    OperationFormModel *m_operationFormModel;
 };
 
 #endif // MAINWINDOW_H

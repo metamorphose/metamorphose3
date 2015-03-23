@@ -1,5 +1,5 @@
-#ifndef DIRITEM_H
-#define DIRITEM_H
+#ifndef RENAMERITEM_H
+#define RENAMERITEM_H
 #include <QtCore>
 
 class RenamerItem
@@ -27,4 +27,4 @@ private:
     RenamerItem::ItemData m_itemData;
 };
 
-#endif // DIRITEM_H
+#endif // RENAMERITEM_H

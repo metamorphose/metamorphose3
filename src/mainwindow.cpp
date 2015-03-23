@@ -8,7 +8,7 @@
 #include "selectionform.h"
 #include "operationsform.h"
 
-MainWindow::MainWindow(RenamerModel *renamerModel, OperationModel *operationModel,
+MainWindow::MainWindow(RenamerModel *renamerModel, OperationFormModel *operationFormModel,
                        QWidget *parent) : QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -24,7 +24,7 @@ MainWindow::MainWindow(RenamerModel *renamerModel, OperationModel *operationMode
     SelectionForm *selectionForm = new SelectionForm(m_renamerModel);
     ui->mainTabWidget->addTab(selectionForm, tr("Selection"));
 
-    OperationsForm *operationsForm = new OperationsForm(operationModel);
+    OperationsForm *operationsForm = new OperationsForm(operationFormModel);
     ui->mainTabWidget->addTab(operationsForm, tr("Renaming"));
 
     statusBar()->showMessage(tr("Ready"));

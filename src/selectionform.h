@@ -1,8 +1,8 @@
 #ifndef SELECTIONFORM_H
 #define SELECTIONFORM_H
 
-#include <QWidget>
-#include "renamermodel.h"
+#include <QtWidgets/QWidget>
+#include "core/renamermodel.h"
 
 namespace Ui {
 class SelectionForm;

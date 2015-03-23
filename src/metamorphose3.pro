@@ -14,20 +14,27 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    diritem.cpp \
-    renamermodel.cpp \
+    core/renamermodel.cpp \
     operationsform.cpp \
     operation/insertform.cpp \
     selectionform.cpp \
-    operationmodel.cpp
+    core/operationmodel.cpp \
+    core/renameritem.cpp \
+    core/insertoperation.cpp \
+    operationformmodel.cpp \
+    operationformitem.cpp
 
 HEADERS  += mainwindow.h \
-    renamermodel.h \
-    renameritem.h \
+    core/renamermodel.h \
+    core/renameritem.h \
     operationsform.h \
     operation/insertform.h \
     selectionform.h \
-    operationmodel.h
+    core/operationmodel.h \
+    core/insertoperation.h \
+    core/operationitem.h \
+    operationformmodel.h \
+    operationformitem.h
 
 FORMS    += mainwindow.ui \
     operationsform.ui \

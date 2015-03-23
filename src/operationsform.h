@@ -1,8 +1,8 @@
 #ifndef OPERATIONSFORM_H
 #define OPERATIONSFORM_H
 
-#include <QWidget>
-#include "operationmodel.h"
+#include <QtWidgets/QWidget>
+#include "operationformmodel.h"
 
 namespace Ui {
 class OperationsForm;
@@ -13,15 +13,17 @@ class OperationsForm : public QWidget
     Q_OBJECT
 
 public:
-    explicit OperationsForm(OperationModel *operationModel, QWidget *parent = 0);
+    explicit OperationsForm(OperationFormModel *operationFormModel, QWidget *parent = 0);
     ~OperationsForm();
 
 private slots:
     void on_addOperation_activated(int index);
 
+    void on_operationsTable_activated(const QModelIndex &index);
+
 private:
     Ui::OperationsForm *ui;
-    OperationModel *m_operationModel;
+    OperationFormModel *m_operationFormModel;
 };
 
 #endif // OPERATIONSFORM_H
