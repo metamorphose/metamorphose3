@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     core/renameritem.cpp \
     core/insertoperation.cpp \
     operationformmodel.cpp \
-    operationformitem.cpp
+    operationformitem.cpp \
+    test.cpp
 
 HEADERS  += mainwindow.h \
     core/renamermodel.h \
@@ -34,7 +35,8 @@ HEADERS  += mainwindow.h \
     core/insertoperation.h \
     core/operationitem.h \
     operationformmodel.h \
-    operationformitem.h
+    operationformitem.h \
+    test.h
 
 FORMS    += mainwindow.ui \
     operationsform.ui \

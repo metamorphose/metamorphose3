@@ -12,16 +12,16 @@ MainWindow::MainWindow(RenamerModel *renamerModel, OperationFormModel *operation
                        QWidget *parent) : QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    m_renamerModel = renamerModel;
-    connect(m_renamerModel, SIGNAL(operationCompleted(QString)),
+    this->renamerModel = renamerModel;
+    connect(renamerModel, SIGNAL(operationCompleted(QString)),
             this, SLOT(dirModel_operationCompleted(QString)));
 
     ui->setupUi(this);
 
-    ui->tableView->setModel(m_renamerModel);
+    ui->tableView->setModel(renamerModel);
     ui->tableView->resizeColumnsToContents();
 
-    SelectionForm *selectionForm = new SelectionForm(m_renamerModel);
+    SelectionForm *selectionForm = new SelectionForm(renamerModel);
     ui->mainTabWidget->addTab(selectionForm, tr("Selection"));
 
     OperationsForm *operationsForm = new OperationsForm(operationFormModel);
@@ -61,25 +61,38 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_previewButton_clicked()
 {
-    m_renamerModel->applyRenamingRules();
+    renamerModel->applyRenamingOps();
 }
 
 void MainWindow::on_renameButton_clicked()
 {
-    m_renamerModel->renameItems();
+    renamerModel->renameItems();
 }
 
 void MainWindow::on_clearAllButton_clicked()
 {
-    m_renamerModel->clear();
+    renamerModel->clear();
     ui->tableView->resizeColumnsToContents();
+    allowPreview(false);
     statusBar()->showMessage(tr("Ready"));
+}
+
+void MainWindow::allowPreview(bool allow) const
+{
+    ui->previewButton->setEnabled(allow);
+    ui->clearAllButton->setEnabled(allow);
 }
 
 void MainWindow::dirModel_operationCompleted(QString message)
 {
     if (!message.isEmpty()) {
         statusBar()->showMessage(message);
+    }
+    if (renamerModel->isEmpty()) {
+        allowPreview(false);
+    }
+    else {
+        allowPreview(true);
     }
     ui->tableView->resizeColumnsToContents();
 }

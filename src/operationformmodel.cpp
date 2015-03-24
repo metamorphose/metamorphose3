@@ -1,14 +1,15 @@
 #include <QtCore/QtDebug>
 #include "operationformmodel.h"
 
-OperationFormModel::OperationFormModel(QObject *parent)
-{
-
-}
 
 OperationFormModel::~OperationFormModel()
 {
+    qDeleteAll(itemsList);
+}
 
+bool OperationFormModel::isEmpty() const
+{
+    return itemsList.isEmpty();
 }
 
 int OperationFormModel::columnCount(const QModelIndex &parent __attribute__ ((unused))) const
@@ -18,7 +19,7 @@ int OperationFormModel::columnCount(const QModelIndex &parent __attribute__ ((un
 
 int OperationFormModel::rowCount(const QModelIndex &parent __attribute__ ((unused))) const
 {
-    return m_operations.size();
+    return itemsList.size();
 }
 
 QVariant OperationFormModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -56,7 +57,7 @@ QVariant OperationFormModel::data(const QModelIndex &index, int role) const
         data = "tooltip data";
     }
     else if (role == Qt::DisplayRole || role == Qt::EditRole) {
-        QWidget *item = m_operations.at(index.row());
+        QWidget *item = itemsList.at(index.row());
         switch (index.column()) {
         case 0:
             data = item->isEnabled();
@@ -73,8 +74,8 @@ QVariant OperationFormModel::data(const QModelIndex &index, int role) const
 
 void OperationFormModel::addOperation(OperationFormItem *operation)
 {
-    int size = m_operations.size();
+    int size = itemsList.size();
     beginInsertRows(parentItem, size, size);
-    m_operations.append(operation);
+    itemsList.append(operation);
     endInsertRows();
 }

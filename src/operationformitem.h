@@ -11,7 +11,6 @@ class OperationFormItem : public QWidget
 
 public:
     explicit OperationFormItem(QWidget *parent = 0);
-    virtual ~OperationFormItem() {}
     virtual OperationItem* getOperation() = 0;
     virtual void configureOperation() = 0;
 };

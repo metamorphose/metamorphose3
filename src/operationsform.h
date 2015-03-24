@@ -13,7 +13,7 @@ class OperationsForm : public QWidget
     Q_OBJECT
 
 public:
-    explicit OperationsForm(OperationFormModel *operationFormModel, QWidget *parent = 0);
+    explicit OperationsForm(OperationFormModel *model, QWidget *parent = 0);
     ~OperationsForm();
 
 private slots:
@@ -23,7 +23,7 @@ private slots:
 
 private:
     Ui::OperationsForm *ui;
-    OperationFormModel *m_operationFormModel;
+    OperationFormModel *operationFormModel;
 };
 
 #endif // OPERATIONSFORM_H

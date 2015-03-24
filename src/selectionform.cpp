@@ -8,7 +8,7 @@ SelectionForm::SelectionForm(RenamerModel *model, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SelectionForm)
 {
-    m_renamerModel = model;
+    renamerModel = model;
     ui->setupUi(this);
 }
 
@@ -25,7 +25,7 @@ void SelectionForm::on_addDirButton_clicked()
                       | QFileDialog::ShowDirsOnly
                       | QFileDialog::DontResolveSymlinks);
     if (dialog.exec()) {
-        m_renamerModel->addDirectories(dialog.selectedFiles(),
+        renamerModel->addDirectories(dialog.selectedFiles(),
                                  ui->addRecursive->isChecked(),
                                  ui->filterNames->text().split(" "),
                                  ui->filterIncludeFiles->isChecked(),
@@ -43,7 +43,7 @@ void SelectionForm::on_addFilesButton_clicked()
                       | QFileDialog::DontResolveSymlinks);
     dialog.setNameFilter(ui->filterNames->text());
     if (dialog.exec()) {
-        m_renamerModel->addFiles(dialog.selectedFiles());
+        renamerModel->addFiles(dialog.selectedFiles());
     }
 }
 
@@ -56,5 +56,5 @@ void SelectionForm::on_sortButton_clicked()
     else {
         order = Qt::DescendingOrder;
     }
-    m_renamerModel->sort(0, order);
+    renamerModel->sort(0, order);
 }

@@ -11,16 +11,20 @@ public:
         Suffix = 1,
         Fixed = 2
     };
+    Q_DECLARE_FLAGS(PositionTypes, PositionType)
 
     explicit InsertOperation();
     ~InsertOperation();
 
-    QString applyOperation(int opPosition) Q_DECL_OVERRIDE;
+    QString applyOperation(int opPosition, QString fileName) Q_DECL_OVERRIDE;
+    void setPositionType(PositionTypes type);
+    void setPosition(int position);
+    void setTextToInsert(QString text);
 
-protected:
-    PositionType positionType;
-    int position;
-    QString text;
+private:
+    PositionTypes positionType;
+    int atPosition;
+    QString textToInsert;
 };
 
 #endif // INSERTOPERATION_H

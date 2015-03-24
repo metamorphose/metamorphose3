@@ -4,15 +4,10 @@
 #include <QtGui/QIcon>
 #include "renamermodel.h"
 
-RenamerModel::RenamerModel(QObject *parent)
-    : QAbstractTableModel(parent)
-{
-    clear();
-}
 
 RenamerModel::~RenamerModel()
 {
-    qDeleteAll(dirItems);
+    qDeleteAll(itemsList);
 }
 
 Qt::ItemFlags RenamerModel::flags(const QModelIndex &index) const
@@ -23,6 +18,11 @@ Qt::ItemFlags RenamerModel::flags(const QModelIndex &index) const
     return Qt::ItemIsEnabled | Qt::ItemNeverHasChildren | Qt::ItemIsSelectable;
 }
 
+bool RenamerModel::isEmpty() const
+{
+    return itemsList.isEmpty();
+}
+
 int RenamerModel::columnCount(const QModelIndex &parent __attribute__ ((unused))) const
 {
     return 3;
@@ -30,7 +30,7 @@ int RenamerModel::columnCount(const QModelIndex &parent __attribute__ ((unused))
 
 int RenamerModel::rowCount(const QModelIndex &parent __attribute__ ((unused))) const
 {
-    return dirItems.size();
+    return itemsList.size();
 }
 
 QVariant RenamerModel::data(const QModelIndex &index, int role) const
@@ -40,11 +40,11 @@ QVariant RenamerModel::data(const QModelIndex &index, int role) const
     }
     QVariant data;
     if (role == Qt::ToolTipRole) {
-        RenamerItem *item = dirItems.at(index.row());
+        RenamerItem *item = itemsList.at(index.row());
         data = item->data().absolutePath;
     }
     else if (role == Qt::DisplayRole || role == Qt::EditRole) {
-        RenamerItem *item = dirItems.at(index.row());
+        RenamerItem *item = itemsList.at(index.row());
         switch (index.column()) {
         case 0:
             data = item->data().absolutePath;
@@ -61,7 +61,7 @@ QVariant RenamerModel::data(const QModelIndex &index, int role) const
     }
     // TODO: there should be no GUI code in this class
     if (role == Qt::DecorationRole && index.column() == 0) {
-        RenamerItem *item = dirItems.at(index.row());
+        RenamerItem *item = itemsList.at(index.row());
         if (item->data().isDir) {
             return QIcon::fromTheme("folder");
         }
@@ -101,17 +101,18 @@ QVariant RenamerModel::headerData(int section, Qt::Orientation orientation, int 
 
 void RenamerModel::clear()
 {
-    if (!dirItems.isEmpty()) {
+    if (!itemsList.isEmpty()) {
         beginResetModel();
         qDebug() << "Clearing items...";
-        dirItems.clear();
+        qDeleteAll(itemsList.begin(), itemsList.end());
+        itemsList.clear();
         endResetModel();
     }
 }
 
 void RenamerModel::addFiles(const QStringList &fileList)
 {
-    int startSize = dirItems.size();
+    int startSize = itemsList.size();
     int listSize = fileList.size();
     int endSize = startSize + listSize;
 
@@ -143,9 +144,7 @@ void RenamerModel::addFile(const QFileInfo &fileInfo)
     itemData.completeBaseName = fileInfo.completeBaseName();
     itemData.completeSuffix = fileInfo.completeSuffix();
     itemData.isDir = fileInfo.isDir();
-
-    RenamerItem *dirItem = new RenamerItem(itemData);
-    dirItems << dirItem;
+    itemsList.append(new RenamerItem(itemData));
 }
 
 void RenamerModel::addDirectories(const QStringList &directoryList,
@@ -196,12 +195,12 @@ bool RenamerModel::addDirectory(const QString &path,
     QElapsedTimer timer;
     timer.start();
 
-    int startSize = dirItems.size();
+    int startSize = itemsList.size();
     while (it.hasNext()) {
         it.next();
         addFile(it.fileInfo());
     }
-    int endSize = dirItems.size();
+    int endSize = itemsList.size();
 
     beginInsertRows(parentItem, startSize, endSize - 1);
     endInsertRows();
@@ -234,10 +233,10 @@ void RenamerModel::sort(int column, Qt::SortOrder order)
     timer.start();
 
     if (order == Qt::AscendingOrder) {
-        std::sort(dirItems.begin(), dirItems.end(), itemCompareAsc);
+        std::sort(itemsList.begin(), itemsList.end(), itemCompareAsc);
     }
     else {
-        std::sort(dirItems.begin(), dirItems.end(), itemCompareDesc);
+        std::sort(itemsList.begin(), itemsList.end(), itemCompareDesc);
     }
 
     int elapsedTime = timer.elapsed();
@@ -247,7 +246,7 @@ void RenamerModel::sort(int column, Qt::SortOrder order)
     emit operationCompleted(message);
 }
 
-bool RenamerModel::applyRenamingRules()
+bool RenamerModel::applyRenamingOps()
 {
     int itemCount = rowCount();
     if (itemCount == 0) {
@@ -258,7 +257,7 @@ bool RenamerModel::applyRenamingRules()
     timer.start();
 
     for (int i = 0; i < itemCount; ++i) {
-        dirItems.at(i)->rename(i);
+        itemsList.at(i)->applyRenameOps(i);
     }
     int elapsedTime = timer.elapsed();
     emit dataChanged(createIndex(-1,0), createIndex(itemCount,columnCount()));
@@ -280,8 +279,8 @@ bool RenamerModel::renameItems()
 
     QDir d;
     for (int i = 0; i < itemCount; ++i) {
-        RenamerItem dirItem = *dirItems.at(i);
-        d.rename(dirItem.oldName(true), dirItem.newName(true));
+        RenamerItem item = *itemsList.at(i);
+        d.rename(item.oldName(true), item.newName(true));
     }
     int elapsedTime = timer.elapsed();
     emit dataChanged(createIndex(-1,0), createIndex(itemCount,columnCount()));

@@ -1,14 +1,9 @@
 #include <QtCore/QtDebug>
 #include "operationmodel.h"
 
-OperationModel::OperationModel(QObject *parent)
-{
-
-}
-
 OperationModel::~OperationModel()
 {
-
+    qDeleteAll(itemsList);
 }
 
 int OperationModel::columnCount(const QModelIndex &parent __attribute__ ((unused))) const
@@ -18,7 +13,7 @@ int OperationModel::columnCount(const QModelIndex &parent __attribute__ ((unused
 
 int OperationModel::rowCount(const QModelIndex &parent __attribute__ ((unused))) const
 {
-    return m_operations.size();
+    return itemsList.size();
 }
 
 QVariant OperationModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -73,8 +68,8 @@ QVariant OperationModel::data(const QModelIndex &index, int role) const
 
 void OperationModel::addOperation(QObject *operation)
 {
-    int size = m_operations.size();
+    int size = itemsList.size();
     beginInsertRows(parentItem, size, size);
-    m_operations.append(operation);
+    itemsList.append(operation);
     endInsertRows();
 }

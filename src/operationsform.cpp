@@ -3,15 +3,15 @@
 #include "ui_operationsform.h"
 #include "operation/insertform.h"
 
-OperationsForm::OperationsForm(OperationFormModel *operationFormModel, QWidget *parent) :
+OperationsForm::OperationsForm(OperationFormModel *model, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::OperationsForm)
 {
-    m_operationFormModel = operationFormModel;
+    operationFormModel = model;
 
     ui->setupUi(this);
 
-    ui->operationsTable->setModel(m_operationFormModel);
+    ui->operationsTable->setModel(operationFormModel);
     ui->operationsTable->resizeColumnsToContents();
 }
 
@@ -26,12 +26,13 @@ void OperationsForm::on_addOperation_activated(int index)
     case 1: {
         qDebug() << "add new InsertForm";
         InsertForm *insertForm = new InsertForm(this);
-        m_operationFormModel->addOperation(insertForm);
+        operationFormModel->addOperation(insertForm);
 
         ui->operationsView->addWidget(insertForm);
-        int count = ui->operationsView->count() - 1;
-        ui->operationsView->setCurrentIndex(count);
+        int selectedOp = ui->operationsView->count() - 1;
 
+        ui->operationsView->setCurrentIndex(selectedOp);
+        ui->operationsTable->selectRow(selectedOp);
         ui->operationsTable->resizeColumnsToContents();
         break;
     }

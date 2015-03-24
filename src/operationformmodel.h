@@ -9,7 +9,6 @@
 class OperationFormModel : public QAbstractTableModel
 {
 public:
-    explicit OperationFormModel(QObject *parent = 0);
     ~OperationFormModel();
 
     QVariant data(const QModelIndex &index,
@@ -20,12 +19,11 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     void addOperation(OperationFormItem *operation);
-
-protected:
-    QModelIndex parentItem;
+    bool isEmpty() const;
 
 private:
-    QList<OperationFormItem*> m_operations;
+    QModelIndex parentItem;
+    QList<OperationFormItem*> itemsList;
 };
 
 #endif // OPERATIONFORMMODEL_H

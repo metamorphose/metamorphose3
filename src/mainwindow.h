@@ -18,7 +18,7 @@ public:
                         OperationFormModel *operationFormModel,
                         QWidget *parent = 0);
     ~MainWindow();
-    void setRenamerModel(RenamerModel *model);
+    void allowPreview(bool allow) const;
 
 private slots:
     void on_actionQuit_triggered();
@@ -30,8 +30,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    RenamerModel *m_renamerModel;
-    OperationFormModel *m_operationFormModel;
+    RenamerModel *renamerModel;
+    OperationFormModel *operationFormModel;
 };
 
 #endif // MAINWINDOW_H

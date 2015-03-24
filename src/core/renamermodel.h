@@ -8,7 +8,6 @@ class RenamerModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
-    explicit RenamerModel(QObject *parent = 0);
     ~RenamerModel();
 
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
@@ -27,7 +26,8 @@ public:
                         const bool &folders,
                         const bool &hidden);
     void addFiles(const QStringList &fileList);
-    bool applyRenamingRules();
+    bool isEmpty() const;
+    bool applyRenamingOps();
     bool renameItems();
     void clear();
 
@@ -44,7 +44,7 @@ protected:
 
 
 private:
-    QList<RenamerItem*> dirItems;
+    QList<RenamerItem*> itemsList;
     QLocale locale;
 };
 

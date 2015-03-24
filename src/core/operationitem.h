@@ -6,7 +6,8 @@ class OperationItem
 {
 public:
     virtual ~OperationItem() {}
-    virtual QString applyOperation(int opPosition) = 0;
+    virtual QString applyOperation(int opPosition,
+                                   QString fileName) = 0;
 };
 
 #endif // OPERATIONITEM_H

@@ -33,7 +33,6 @@ Session.vim
 .netrwhist
 *~
 
-
 # Qt-es
 /.qmake.cache
 /.qmake.stash

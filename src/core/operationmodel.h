@@ -8,7 +8,6 @@ class OperationModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
-    explicit OperationModel(QObject *parent = 0);
     ~OperationModel();
 
     QVariant data(const QModelIndex &index,
@@ -24,7 +23,7 @@ protected:
     QModelIndex parentItem;
 
 private:
-    QList<QObject*> m_operations;
+    QList<QObject*> itemsList;
 };
 
 #endif // OPERATIONMODEL_H

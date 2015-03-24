@@ -18,7 +18,7 @@ public:
 
 private:
     Ui::SelectionForm *ui;
-    RenamerModel* m_renamerModel;
+    RenamerModel* renamerModel;
 
 private slots:
     void on_addDirButton_clicked();
