@@ -5,6 +5,8 @@
 
 class InsertOperation : public OperationItem
 {
+    Q_OBJECT
+
 public:
     enum PositionType {
         Prefix = 0,
@@ -12,9 +14,6 @@ public:
         Fixed = 2
     };
     Q_DECLARE_FLAGS(PositionTypes, PositionType)
-
-    explicit InsertOperation();
-    ~InsertOperation();
 
     QString applyOperation(int opPosition, QString fileName) Q_DECL_OVERRIDE;
     void setPositionType(PositionTypes type);

@@ -1,56 +1,46 @@
 #include <QtCore/QtDebug>
 #include "renameritem.h"
 
-RenamerItem::RenamerItem(const RenamerItem::ItemData &data, QObject *parent)
+RenamerItem::RenamerItem(QObject *parent)
 {
-    itemData = data;
     nameChanged = false;
-}
-
-RenamerItem::~RenamerItem()
-{
-}
-
-RenamerItem::ItemData RenamerItem::data() const
-{
-    return itemData;
 }
 
 QString RenamerItem::oldName(const bool &absolute) const
 {
     QString oldName;
-    if (!itemData.completeSuffix.isEmpty()) {
+    if (!completeSuffix.isEmpty()) {
         oldName = QString("%1.%2")
-                        .arg(itemData.completeBaseName)
-                        .arg(itemData.completeSuffix);
+                        .arg(completeBaseName)
+                        .arg(completeSuffix);
     }
     else {
-        oldName = itemData.completeBaseName;
+        oldName = completeBaseName;
     }
 
     if (absolute) {
-        oldName = QString("%1/%2").arg(itemData.absolutePath).arg(oldName);
+        oldName = QString("%1/%2").arg(absolutePath).arg(oldName);
     }
     return oldName;
 }
 
 QString RenamerItem::newName(const bool &absolute) const
 {
-    if (itemData.newBaseName.isEmpty()) {
+    if (newBaseName.isEmpty()) {
         return oldName(absolute);
     }
     QString newName;
-    if (!itemData.newSuffix.isEmpty()) {
+    if (!newSuffix.isEmpty()) {
         newName = QString("%1.%2")
-                        .arg(itemData.newBaseName)
-                        .arg(itemData.newSuffix);
+                        .arg(newBaseName)
+                        .arg(newSuffix);
     }
     else {
-        newName = itemData.newBaseName;
+        newName = newBaseName;
     }
 
     if (absolute) {
-        newName = QString("%1/%2").arg(itemData.absolutePath).arg(newName);
+        newName = QString("%1/%2").arg(absolutePath).arg(newName);
     }
     return newName;
 }
@@ -62,21 +52,21 @@ bool RenamerItem::isNameChanged()
 
 void RenamerItem::applyRenameOps(const long &index)
 {
-    itemData.newBaseName = QString("%1_new_%2")
+    newBaseName = QString("%1_new_%2")
             .arg(index + 1, 3, 10, QChar('0'))
-            .arg(itemData.completeBaseName);
-    itemData.newSuffix = itemData.completeSuffix;
+            .arg(completeBaseName);
+    newSuffix = completeSuffix;
 
-    if (itemData.newBaseName != itemData.completeBaseName
-        || itemData.newSuffix != itemData.completeSuffix) {
+    if (newBaseName != completeBaseName
+        || newSuffix != completeSuffix) {
         nameChanged = true;
     }
 }
 
 bool RenamerItem::itemCompare(RenamerItem *i, RenamerItem *j, Qt::SortOrder order)
 {
-    if (i->data().isDir != j->data().isDir) {
-        return i->data().isDir;
+    if (i->isDir != j->isDir) {
+        return i->isDir;
     }
     int compare = i->oldName(true).localeAwareCompare(j->oldName(true));
     if (order == Qt::AscendingOrder && compare < 0) {

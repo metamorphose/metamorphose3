@@ -3,33 +3,28 @@
 
 #include <QtCore>
 
-class RenamerItem// : public QObject
+class RenamerItem : public QObject
 {
-    //Q_OBJECT
+    Q_OBJECT
 
 public:
-    struct ItemData {
-      QString absolutePath;
-      QString completeBaseName;
-      QString completeSuffix;
-      bool isDir;
-      QString newBaseName;
-      QString newSuffix;
-    };
+    explicit RenamerItem(QObject *parent = 0);
 
-    explicit RenamerItem(const ItemData &itemData, QObject *parent = 0);
-    ~RenamerItem();
-
-    ItemData data() const;
     QString oldName(const bool &absolute = false) const;
     QString newName(const bool &absolute = false) const;
     void applyRenameOps(const long &index);
     bool isNameChanged();
     static bool itemCompare(RenamerItem *i, RenamerItem *j, Qt::SortOrder order);
 
+    QString absolutePath;
+    QString completeBaseName;
+    QString completeSuffix;
+    bool isDir;
+    QString newBaseName;
+    QString newSuffix;
+
 private:
     bool nameChanged;
-    RenamerItem::ItemData itemData;
 };
 
 #endif // RENAMERITEM_H

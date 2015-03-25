@@ -41,13 +41,13 @@ QVariant RenamerModel::data(const QModelIndex &index, int role) const
     QVariant data;
     if (role == Qt::ToolTipRole) {
         RenamerItem *item = itemsList.at(index.row());
-        data = item->data().absolutePath;
+        data = item->absolutePath;
     }
     else if (role == Qt::DisplayRole || role == Qt::EditRole) {
         RenamerItem *item = itemsList.at(index.row());
         switch (index.column()) {
         case 0:
-            data = item->data().absolutePath;
+            data = item->absolutePath;
             break;
         case 1:
             data = item->oldName();
@@ -62,7 +62,7 @@ QVariant RenamerModel::data(const QModelIndex &index, int role) const
     // TODO: there should be no GUI code in this class
     if (role == Qt::DecorationRole && index.column() == 0) {
         RenamerItem *item = itemsList.at(index.row());
-        if (item->data().isDir) {
+        if (item->isDir) {
             return QIcon::fromTheme("folder");
         }
         return QIcon::fromTheme("text-x-generic");
@@ -139,12 +139,12 @@ void RenamerModel::addFile(const QFileInfo &fileInfo)
 {
     //qDebug() << "file:" << fileInfo.fileName();
 
-    RenamerItem::ItemData itemData;
-    itemData.absolutePath = fileInfo.absolutePath();
-    itemData.completeBaseName = fileInfo.completeBaseName();
-    itemData.completeSuffix = fileInfo.completeSuffix();
-    itemData.isDir = fileInfo.isDir();
-    itemsList.append(new RenamerItem(itemData));
+    RenamerItem *item = new RenamerItem();
+    item->absolutePath = fileInfo.absolutePath();
+    item->completeBaseName = fileInfo.completeBaseName();
+    item->completeSuffix = fileInfo.completeSuffix();
+    item->isDir = fileInfo.isDir();
+    itemsList.append(item);
 }
 
 void RenamerModel::addDirectories(const QStringList &directoryList,
@@ -279,8 +279,8 @@ bool RenamerModel::renameItems()
 
     QDir d;
     for (int i = 0; i < itemCount; ++i) {
-        RenamerItem item = *itemsList.at(i);
-        d.rename(item.oldName(true), item.newName(true));
+        RenamerItem *item = itemsList.at(i);
+        d.rename(item->oldName(true), item->newName(true));
     }
     int elapsedTime = timer.elapsed();
     emit dataChanged(createIndex(-1,0), createIndex(itemCount,columnCount()));

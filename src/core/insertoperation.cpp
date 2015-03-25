@@ -1,14 +1,5 @@
+#include <QtCore/QtDebug>
 #include "insertoperation.h"
-
-InsertOperation::InsertOperation()
-{
-
-}
-
-InsertOperation::~InsertOperation()
-{
-
-}
 
 QString InsertOperation::applyOperation(int opPosition, QString fileName)
 {
