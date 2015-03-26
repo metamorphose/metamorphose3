@@ -9,7 +9,7 @@ class OperationItem : public QObject
 
 public:
     virtual QString applyOperation(int opPosition,
-                                       QString fileName) = 0;
+                                   QString fileName) = 0;
 };
 
 #endif // OPERATIONITEM_H

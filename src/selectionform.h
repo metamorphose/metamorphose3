@@ -16,6 +16,9 @@ public:
     explicit SelectionForm(RenamerModel *model, QWidget *parent = 0);
     ~SelectionForm();
 
+signals:
+    void itemsLoaded(int itemCount);
+
 private:
     Ui::SelectionForm *ui;
     RenamerModel* renamerModel;

@@ -6,6 +6,7 @@
 #include "ui_mainwindow.h"
 
 #include "selectionform.h"
+#include "ui_selectionform.h"
 #include "operationsform.h"
 
 MainWindow::MainWindow(RenamerModel *renamerModel, OperationFormModel *operationFormModel,
@@ -22,7 +23,11 @@ MainWindow::MainWindow(RenamerModel *renamerModel, OperationFormModel *operation
     ui->tableView->resizeColumnsToContents();
 
     SelectionForm *selectionForm = new SelectionForm(renamerModel);
+    connect(selectionForm, SIGNAL(itemsLoaded(int)),
+            this, SLOT(itemsLoaded(int)));
+
     ui->mainTabWidget->addTab(selectionForm, tr("Selection"));
+
 
     OperationsForm *operationsForm = new OperationsForm(operationFormModel);
     ui->mainTabWidget->addTab(operationsForm, tr("Renaming"));
@@ -88,12 +93,11 @@ void MainWindow::dirModel_operationCompleted(QString message)
     if (!message.isEmpty()) {
         statusBar()->showMessage(message);
     }
-    if (renamerModel->isEmpty()) {
-        allowPreview(false);
-    }
-    else {
-        allowPreview(true);
-    }
     ui->tableView->resizeColumnsToContents();
+}
+
+void MainWindow::itemsLoaded(int itemCount)
+{
+    allowPreview((itemCount != 0));
 }
 

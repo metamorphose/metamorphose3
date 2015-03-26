@@ -25,13 +25,15 @@ void SelectionForm::on_addDirButton_clicked()
                       | QFileDialog::ShowDirsOnly
                       | QFileDialog::DontResolveSymlinks);
     if (dialog.exec()) {
-        renamerModel->addDirectories(dialog.selectedFiles(),
-                                 ui->addRecursive->isChecked(),
-                                 ui->filterNames->text().split(" "),
-                                 ui->filterIncludeFiles->isChecked(),
-                                 ui->filterIncludeDirs->isChecked(),
-                                 ui->filterIncludeHidden->isChecked()
-                                 );
+        int itemCount;
+        itemCount = renamerModel->addDirectories(dialog.selectedFiles(),
+                                                 ui->addRecursive->isChecked(),
+                                                 ui->filterNames->text().split(" "),
+                                                 ui->filterIncludeFiles->isChecked(),
+                                                 ui->filterIncludeDirs->isChecked(),
+                                                 ui->filterIncludeHidden->isChecked()
+                                                 );
+        emit itemsLoaded(itemCount);
     }
 }
 
@@ -43,7 +45,8 @@ void SelectionForm::on_addFilesButton_clicked()
                       | QFileDialog::DontResolveSymlinks);
     dialog.setNameFilter(ui->filterNames->text());
     if (dialog.exec()) {
-        renamerModel->addFiles(dialog.selectedFiles());
+        int itemCount = renamerModel->addFiles(dialog.selectedFiles());
+        emit itemsLoaded(itemCount);
     }
 }
 

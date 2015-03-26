@@ -110,7 +110,7 @@ void RenamerModel::clear()
     }
 }
 
-void RenamerModel::addFiles(const QStringList &fileList)
+int RenamerModel::addFiles(const QStringList &fileList)
 {
     int startSize = itemsList.size();
     int listSize = fileList.size();
@@ -133,12 +133,12 @@ void RenamerModel::addFiles(const QStringList &fileList)
     qDebug() << "Loaded" << itemCount << "items in" << elapsedTime << "msec";
     QString message = tr("Loaded %n item(s)", "", itemCount);
     emit operationCompleted(message);
+    return itemCount;
 }
 
 void RenamerModel::addFile(const QFileInfo &fileInfo)
 {
     //qDebug() << "file:" << fileInfo.fileName();
-
     RenamerItem *item = new RenamerItem();
     item->absolutePath = fileInfo.absolutePath();
     item->completeBaseName = fileInfo.completeBaseName();
@@ -147,7 +147,7 @@ void RenamerModel::addFile(const QFileInfo &fileInfo)
     itemsList.append(item);
 }
 
-void RenamerModel::addDirectories(const QStringList &directoryList,
+int RenamerModel::addDirectories(const QStringList &directoryList,
                               const bool &recursive,
                               const QStringList nameFilters,
                               const bool &files,
@@ -165,12 +165,14 @@ void RenamerModel::addDirectories(const QStringList &directoryList,
         filter = filter | QDir::Hidden;
     }
     qDebug() << "Adding" << directoryList.size() << "directories...";
+    int itemCount = 0;
     for (int i = 0; i < directoryList.size(); i++) {
-        addDirectory(directoryList.at(i), recursive, nameFilters, filter);
+        itemCount += addDirectory(directoryList.at(i), recursive, nameFilters, filter);
     }
+    return itemCount;
 }
 
-bool RenamerModel::addDirectory(const QString &path,
+int RenamerModel::addDirectory(const QString &path,
                             const bool recursive,
                             const QStringList &nameFilters,
                             const QDir::Filters &filter)
@@ -210,7 +212,7 @@ bool RenamerModel::addDirectory(const QString &path,
     qDebug() << "Loaded" << itemCount << "items in" << elapsedTime << "msec";
     QString message = QString(tr("Loaded %n item(s)", "", itemCount));
     emit operationCompleted(message);
-    return true;
+    return itemCount;
 }
 
 bool itemCompareAsc(RenamerItem *i, RenamerItem *j)

@@ -15,7 +15,7 @@ public:
     };
     Q_DECLARE_FLAGS(PositionTypes, PositionType)
 
-    QString applyOperation(int opPosition, QString fileName) Q_DECL_OVERRIDE;
+    QString applyOperation(int opPosition, QString fileName) override;
     void setPositionType(PositionTypes type);
     void setPosition(int position);
     void setTextToInsert(QString text);

@@ -27,6 +27,7 @@ private slots:
     void on_previewButton_clicked();
     void on_clearAllButton_clicked();
     void dirModel_operationCompleted(QString message);
+    void itemsLoaded(int itemCount);
 
 private:
     Ui::MainWindow *ui;

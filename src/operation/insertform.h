@@ -15,8 +15,8 @@ class InsertForm : public OperationFormItem
 public:
     explicit InsertForm(QWidget *parent = 0);
     ~InsertForm();
-    OperationItem* getOperation() Q_DECL_OVERRIDE;
-    void configureOperation() Q_DECL_OVERRIDE;
+    OperationItem* getOperation() override;
+    void configureOperation() override;
 
 private slots:
     void on_positionSelection_buttonClicked(int id);

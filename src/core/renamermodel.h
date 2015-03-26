@@ -10,22 +10,22 @@ class RenamerModel : public QAbstractTableModel
 public:
     ~RenamerModel();
 
-    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
     QVariant data(const QModelIndex &index,
-                  int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+                  int role = Qt::DisplayRole) const override;
     QVariant headerData(int section,
                         Qt::Orientation orientation,
-                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE;
-    void addDirectories(const QStringList &directoryList,
+                        int role = Qt::DisplayRole) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
+    int addDirectories(const QStringList &directoryList,
                         const bool &recursive,
                         const QStringList nameFilters,
                         const bool &files,
                         const bool &folders,
                         const bool &hidden);
-    void addFiles(const QStringList &fileList);
+    int addFiles(const QStringList &fileList);
     bool isEmpty() const;
     bool applyRenamingOps();
     bool renameItems();
@@ -37,7 +37,7 @@ signals:
 protected:
     QModelIndex parentItem;
     void addFile(const QFileInfo &fileInfo);
-    bool addDirectory(const QString &path,
+    int addDirectory(const QString &path,
                       const bool recursive,
                       const QStringList &nameFilters,
                       const QDir::Filters &filter);
