@@ -8,12 +8,12 @@ class RenamerItem : public QObject
     Q_OBJECT
 
 public:
-    explicit RenamerItem(QObject *parent = 0);
-
     QString oldName(const bool &absolute = false) const;
     QString newName(const bool &absolute = false) const;
-    void applyRenameOps(const long &index);
+    bool applyRenameOps(const int &index);
     bool isNameChanged();
+    bool hasWarning();
+    bool hasError();
     static bool itemCompare(RenamerItem *i, RenamerItem *j, Qt::SortOrder order);
 
     QString absolutePath;
@@ -24,7 +24,8 @@ public:
     QString newSuffix;
 
 private:
-    bool nameChanged;
+    bool nameChanged = false;
+    int errorCode = 0;
 };
 
 #endif // RENAMERITEM_H

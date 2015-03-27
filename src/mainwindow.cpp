@@ -66,7 +66,10 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_previewButton_clicked()
 {
-    renamerModel->applyRenamingOps();
+    int changedCount = renamerModel->applyRenamingOps();
+    if (changedCount > 0) {
+        ui->renameButton->setEnabled(true);
+    }
 }
 
 void MainWindow::on_renameButton_clicked()
@@ -79,6 +82,7 @@ void MainWindow::on_clearAllButton_clicked()
     renamerModel->clear();
     ui->tableView->resizeColumnsToContents();
     allowPreview(false);
+    ui->renameButton->setEnabled(false);
     statusBar()->showMessage(tr("Ready"));
 }
 

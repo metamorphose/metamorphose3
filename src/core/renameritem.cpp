@@ -1,11 +1,6 @@
 #include <QtCore/QtDebug>
 #include "renameritem.h"
 
-RenamerItem::RenamerItem(QObject *parent)
-{
-    nameChanged = false;
-}
-
 QString RenamerItem::oldName(const bool &absolute) const
 {
     QString oldName;
@@ -50,7 +45,17 @@ bool RenamerItem::isNameChanged()
     return nameChanged;
 }
 
-void RenamerItem::applyRenameOps(const long &index)
+bool RenamerItem::hasWarning()
+{
+    return false;
+}
+
+bool RenamerItem::hasError()
+{
+    return false;
+}
+
+bool RenamerItem::applyRenameOps(const int &index)
 {
     newBaseName = QString("%1_new_%2")
             .arg(index + 1, 3, 10, QChar('0'))
@@ -61,6 +66,7 @@ void RenamerItem::applyRenameOps(const long &index)
         || newSuffix != completeSuffix) {
         nameChanged = true;
     }
+    return nameChanged;
 }
 
 bool RenamerItem::itemCompare(RenamerItem *i, RenamerItem *j, Qt::SortOrder order)

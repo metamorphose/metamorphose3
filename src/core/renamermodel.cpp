@@ -2,6 +2,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QDirIterator>
 #include <QtGui/QIcon>
+#include <QtGui/QBrush>
 #include "renamermodel.h"
 
 
@@ -35,10 +36,10 @@ int RenamerModel::rowCount(const QModelIndex &parent __attribute__ ((unused))) c
 
 QVariant RenamerModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid()) {
-        return QVariant();
-    }
     QVariant data;
+    if (!index.isValid()) {
+        return data;
+    }
     if (role == Qt::ToolTipRole) {
         RenamerItem *item = itemsList.at(index.row());
         data = item->absolutePath;
@@ -60,14 +61,25 @@ QVariant RenamerModel::data(const QModelIndex &index, int role) const
         }
     }
     // TODO: there should be no GUI code in this class
-    if (role == Qt::DecorationRole && index.column() == 0) {
+    else if (role == Qt::BackgroundRole) {
+        RenamerItem *item = itemsList.at(index.row());
+        if (item->hasError()) {
+            return QBrush(QColor(255, 0, 0, 20));
+        }
+        else if (item->hasWarning()) {
+            return QBrush(QColor(255, 255, 0, 20));
+        }
+        else if (item->isNameChanged()) {
+            return QBrush(QColor(0, 255, 0, 10));
+        }
+    }
+    else if (role == Qt::DecorationRole && index.column() == 0) {
         RenamerItem *item = itemsList.at(index.row());
         if (item->isDir) {
             return QIcon::fromTheme("folder");
         }
         return QIcon::fromTheme("text-x-generic");
     }
-    //qDebug() << "item:" << data;
     return data;
 }
 
@@ -248,7 +260,7 @@ void RenamerModel::sort(int column, Qt::SortOrder order)
     emit operationCompleted(message);
 }
 
-bool RenamerModel::applyRenamingOps()
+int RenamerModel::applyRenamingOps()
 {
     int itemCount = rowCount();
     if (itemCount == 0) {
@@ -258,15 +270,19 @@ bool RenamerModel::applyRenamingOps()
     QElapsedTimer timer;
     timer.start();
 
+    int changedCount = 0;
     for (int i = 0; i < itemCount; ++i) {
-        itemsList.at(i)->applyRenameOps(i);
+        bool nameChanged = itemsList.at(i)->applyRenameOps(i);
+        if (nameChanged) {
+            changedCount += 1;
+        }
     }
     int elapsedTime = timer.elapsed();
     emit dataChanged(createIndex(-1,0), createIndex(itemCount,columnCount()));
-    qDebug() << "Applyed rules on" << itemCount << "items in" << elapsedTime << "msec";
+    qDebug() << "Applied rules on" << itemCount << "items in" << elapsedTime << "msec";
     QString message = tr("Applied rules on %n item(s)", "", itemCount);
     emit operationCompleted(message);
-    return true;
+    return changedCount;
 }
 
 bool RenamerModel::renameItems()

@@ -27,7 +27,7 @@ public:
                         const bool &hidden);
     int addFiles(const QStringList &fileList);
     bool isEmpty() const;
-    bool applyRenamingOps();
+    int applyRenamingOps();
     bool renameItems();
     void clear();
 
