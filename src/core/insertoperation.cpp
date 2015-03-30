@@ -1,16 +1,22 @@
 #include <QtCore/QtDebug>
 #include "insertoperation.h"
 
-QString InsertOperation::applyOperation(int opPosition, QString fileName)
+QString InsertOperation::applyOperation(int itemPosition, QString &fileName)
 {
-    QString parsedText = QString("%1").arg(opPosition);
-
     switch (positionType) {
     case Prefix:
-        fileName.prepend(parsedText);
+        fileName.prepend(textToInsert);
         break;
     case Suffix:
-        fileName.append(parsedText);
+        fileName.append(textToInsert);
+        break;
+    case Fixed:
+        if (atPosition < fileName.length()) {
+            fileName.insert(atPosition, textToInsert);
+        }
+        else {
+            fileName.append(textToInsert);
+        }
         break;
     default:
         qWarning() << "unhandled PositionType";

@@ -4,11 +4,13 @@
 #include <QtWidgets/QWidget>
 #include <QtCore/QAbstractTableModel>
 #include "operationformitem.h"
+#include "core/operationmodel.h"
 
 
 class OperationFormModel : public QAbstractTableModel
 {
 public:
+    explicit OperationFormModel(QObject *parent = 0);
     ~OperationFormModel();
 
     QVariant data(const QModelIndex &index,
@@ -18,12 +20,14 @@ public:
                         int role = Qt::DisplayRole) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-    void addOperation(OperationFormItem *operation);
+    void addOperationForm(OperationFormItem *opForm);
+    OperationModel* getOperations();
     bool isEmpty() const;
 
 private:
     QModelIndex parentItem;
-    QList<OperationFormItem*> itemsList;
+    QList<OperationFormItem*> opFormList;
+    OperationModel *operations;
 };
 
 #endif // OPERATIONFORMMODEL_H

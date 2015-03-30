@@ -1,15 +1,20 @@
 #include <QtCore/QtDebug>
 #include "operationformmodel.h"
 
+OperationFormModel::OperationFormModel(QObject *parent)
+    : QAbstractTableModel(parent)
+{
+    operations = new OperationModel(this);
+}
 
 OperationFormModel::~OperationFormModel()
 {
-    qDeleteAll(itemsList);
+    qDeleteAll(opFormList);
 }
 
 bool OperationFormModel::isEmpty() const
 {
-    return itemsList.isEmpty();
+    return opFormList.isEmpty();
 }
 
 int OperationFormModel::columnCount(const QModelIndex &parent __attribute__ ((unused))) const
@@ -19,7 +24,7 @@ int OperationFormModel::columnCount(const QModelIndex &parent __attribute__ ((un
 
 int OperationFormModel::rowCount(const QModelIndex &parent __attribute__ ((unused))) const
 {
-    return itemsList.size();
+    return opFormList.size();
 }
 
 QVariant OperationFormModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -57,10 +62,10 @@ QVariant OperationFormModel::data(const QModelIndex &index, int role) const
         data = "tooltip data";
     }
     else if (role == Qt::DisplayRole || role == Qt::EditRole) {
-        QWidget *item = itemsList.at(index.row());
+        QWidget *opForm = opFormList.at(index.row());
         switch (index.column()) {
         case 0:
-            data = item->isEnabled();
+            data = opForm->isEnabled();
             break;
         case 1:
             data = "Insert";
@@ -72,10 +77,21 @@ QVariant OperationFormModel::data(const QModelIndex &index, int role) const
     return data;
 }
 
-void OperationFormModel::addOperation(OperationFormItem *operation)
+void OperationFormModel::addOperationForm(OperationFormItem *opForm)
 {
-    int size = itemsList.size();
+    int size = opFormList.size();
     beginInsertRows(parentItem, size, size);
-    itemsList.append(operation);
+    qDebug() << "Append" << opForm->objectName();
+    opFormList.append(opForm);
     endInsertRows();
+}
+
+OperationModel* OperationFormModel::getOperations()
+{
+    operations->clear();
+    for (OperationFormItem *opForm : opFormList) {
+        opForm->configureOperation();
+        operations->addOperation(opForm->getOperation());
+    }
+    return operations;
 }

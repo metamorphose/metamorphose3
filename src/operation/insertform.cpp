@@ -35,5 +35,15 @@ OperationItem* InsertForm::getOperation()
 
 void InsertForm::configureOperation()
 {
-
+    insertOperation->setTextToInsert(ui->toInsert->text());
+    if (ui->asPrefix->isChecked()) {
+        insertOperation->setPositionType(InsertOperation::Prefix);
+    }
+    else if (ui->asSuffix->isChecked()) {
+        insertOperation->setPositionType(InsertOperation::Suffix);
+    }
+    else if (ui->atPosition->isChecked()) {
+        insertOperation->setPositionType(InsertOperation::Fixed);
+        insertOperation->setPosition(ui->position->value());
+    }
 }

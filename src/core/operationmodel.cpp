@@ -1,9 +1,35 @@
 #include <QtCore/QtDebug>
 #include "operationmodel.h"
 
+OperationModel::OperationModel(QObject *parent)
+    : QAbstractTableModel(parent)
+{
+
+}
+
 OperationModel::~OperationModel()
 {
     qDeleteAll(itemsList);
+}
+
+/**
+ * Removes all items from the model.
+ */
+void OperationModel::clear()
+{
+    if (!itemsList.isEmpty()) {
+        beginResetModel();
+        qDebug() << "Clearing operations...";
+        // don't delete the items on every clear
+        //qDeleteAll(itemsList.begin(), itemsList.end());
+        itemsList.clear();
+        endResetModel();
+    }
+}
+
+bool OperationModel::isEmpty()
+{
+    return itemsList.isEmpty();
 }
 
 int OperationModel::columnCount(const QModelIndex &parent __attribute__ ((unused))) const
@@ -51,7 +77,6 @@ QVariant OperationModel::data(const QModelIndex &index, int role) const
         data = "tooltip data";
     }
     else if (role == Qt::DisplayRole || role == Qt::EditRole) {
-        //QObject *item = m_operations.at(index.row());
         switch (index.column()) {
         case 0:
             data = true;
@@ -66,10 +91,19 @@ QVariant OperationModel::data(const QModelIndex &index, int role) const
     return data;
 }
 
-void OperationModel::addOperation(QObject *operation)
+void OperationModel::addOperation(OperationItem *operation)
 {
     int size = itemsList.size();
     beginInsertRows(parentItem, size, size);
     itemsList.append(operation);
     endInsertRows();
+}
+
+QString OperationModel::applyOperations(const int &index, QString &filename)
+{
+    QString newName = QString("%1").arg(filename);
+    for (OperationItem *op : itemsList) {
+       op->applyOperation(index, newName);
+    }
+    return newName;
 }

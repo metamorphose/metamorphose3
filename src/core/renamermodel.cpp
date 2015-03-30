@@ -5,6 +5,11 @@
 #include <QtGui/QBrush>
 #include "renamermodel.h"
 
+RenamerModel::RenamerModel(QObject *parent)
+    : QAbstractTableModel(parent)
+{
+
+}
 
 RenamerModel::~RenamerModel()
 {
@@ -260,6 +265,11 @@ void RenamerModel::sort(int column, Qt::SortOrder order)
     emit operationCompleted(message);
 }
 
+void RenamerModel::setOperations(OperationModel *operationModel)
+{
+    operations = operationModel;
+}
+
 int RenamerModel::applyRenamingOps()
 {
     int itemCount = rowCount();
@@ -272,7 +282,7 @@ int RenamerModel::applyRenamingOps()
 
     int changedCount = 0;
     for (int i = 0; i < itemCount; ++i) {
-        bool nameChanged = itemsList.at(i)->applyRenameOps(i);
+        bool nameChanged = itemsList.at(i)->applyRenameOps(i, operations);
         if (nameChanged) {
             changedCount += 1;
         }

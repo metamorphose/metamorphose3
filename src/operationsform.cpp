@@ -24,9 +24,8 @@ void OperationsForm::on_addOperation_activated(int index)
 {
     switch (index) {
     case 1: {
-        qDebug() << "add new InsertForm";
-        InsertForm *insertForm = new InsertForm(this);
-        operationFormModel->addOperation(insertForm);
+        InsertForm *insertForm = new InsertForm();
+        operationFormModel->addOperationForm(insertForm);
 
         ui->operationsView->addWidget(insertForm);
         int selectedOp = ui->operationsView->count() - 1;

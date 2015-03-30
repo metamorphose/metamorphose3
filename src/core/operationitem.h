@@ -8,8 +8,8 @@ class OperationItem : public QObject
     Q_OBJECT
 
 public:
-    virtual QString applyOperation(int opPosition,
-                                   QString fileName) = 0;
+    virtual QString applyOperation(int itemPosition,
+                                   QString &fileName) = 0;
 };
 
 #endif // OPERATIONITEM_H

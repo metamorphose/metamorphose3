@@ -9,7 +9,8 @@
 #include "ui_selectionform.h"
 #include "operationsform.h"
 
-MainWindow::MainWindow(RenamerModel *renamerModel, OperationFormModel *operationFormModel,
+MainWindow::MainWindow(RenamerModel *renamerModel,
+                       OperationFormModel *operationFormModel,
                        QWidget *parent) : QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -29,6 +30,7 @@ MainWindow::MainWindow(RenamerModel *renamerModel, OperationFormModel *operation
     ui->mainTabWidget->addTab(selectionForm, tr("Selection"));
 
 
+    this->operationFormModel = operationFormModel;
     OperationsForm *operationsForm = new OperationsForm(operationFormModel);
     ui->mainTabWidget->addTab(operationsForm, tr("Renaming"));
 
@@ -66,6 +68,7 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_previewButton_clicked()
 {
+    renamerModel->setOperations(operationFormModel->getOperations());
     int changedCount = renamerModel->applyRenamingOps();
     if (changedCount > 0) {
         ui->renameButton->setEnabled(true);
@@ -88,8 +91,8 @@ void MainWindow::on_clearAllButton_clicked()
 
 void MainWindow::allowPreview(bool allow) const
 {
-    ui->previewButton->setEnabled(allow);
     ui->clearAllButton->setEnabled(allow);
+    ui->previewButton->setEnabled(allow);
 }
 
 void MainWindow::dirModel_operationCompleted(QString message)

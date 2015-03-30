@@ -2,15 +2,19 @@
 #define RENAMERITEM_H
 
 #include <QtCore>
+#include "operationmodel.h"
 
 class RenamerItem : public QObject
 {
     Q_OBJECT
 
 public:
+    explicit RenamerItem(QObject *parent = 0);
+
     QString oldName(const bool &absolute = false) const;
     QString newName(const bool &absolute = false) const;
-    bool applyRenameOps(const int &index);
+    bool applyRenameOps(const int &index,
+                        OperationModel* operations);
     bool isNameChanged();
     bool hasWarning();
     bool hasError();

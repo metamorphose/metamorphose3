@@ -8,6 +8,7 @@ class RenamerModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
+    explicit RenamerModel(QObject *parent = 0);
     ~RenamerModel();
 
     Qt::ItemFlags flags(const QModelIndex &index) const override;
@@ -29,6 +30,7 @@ public:
     bool isEmpty() const;
     int applyRenamingOps();
     bool renameItems();
+    void setOperations(OperationModel *operationModel);
     void clear();
 
 signals:
@@ -45,6 +47,7 @@ protected:
 
 private:
     QList<RenamerItem*> itemsList;
+    OperationModel* operations;
     QLocale locale;
 };
 

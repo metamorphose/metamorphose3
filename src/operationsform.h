@@ -18,7 +18,6 @@ public:
 
 private slots:
     void on_addOperation_activated(int index);
-
     void on_operationsTable_activated(const QModelIndex &index);
 
 private:
