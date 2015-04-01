@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string notr="true">Métamorphose 3</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/image/icon/image/icon/metamorphose.ico</normaloff>:/image/icon/image/icon/metamorphose.ico</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <property name="enabled">
     <bool>true</bool>
@@ -185,6 +189,8 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -1,4 +1,3 @@
-#include <QtCore/QtDebug>
 #include "operationmodel.h"
 
 OperationModel::OperationModel(QObject *parent)
@@ -13,13 +12,14 @@ OperationModel::~OperationModel()
 }
 
 /**
- * Removes all items from the model.
+ * @brief OperationModel::clear
+ * @description Removes all items from the model.
  */
 void OperationModel::clear()
 {
     if (!itemsList.isEmpty()) {
         beginResetModel();
-        qDebug() << "Clearing operations...";
+        qCDebug(M3CORE) << "Clearing operations...";
         // don't delete the items on every clear
         //qDeleteAll(itemsList.begin(), itemsList.end());
         itemsList.clear();
@@ -99,9 +99,11 @@ void OperationModel::addOperation(OperationItem *operation)
     endInsertRows();
 }
 
-QString OperationModel::applyOperations(const int &index, QString &filename)
+std::pair<QString, QString> OperationModel::applyOperations(const int &index,
+                                                        std::pair<QString, QString> oldName)
 {
-    QString newName = QString("%1").arg(filename);
+    std::pair<QString, QString> newName = std::make_pair(QString("%1").arg(oldName.first),
+                                                         QString("%1").arg(oldName.second));
     for (OperationItem *op : itemsList) {
        op->applyOperation(index, newName);
     }

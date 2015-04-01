@@ -1,4 +1,3 @@
-#include <QtCore/QtDebug>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QFileDialog>
 
@@ -31,7 +30,7 @@ MainWindow::MainWindow(RenamerModel *renamerModel,
 
 
     this->operationFormModel = operationFormModel;
-    OperationsForm *operationsForm = new OperationsForm(operationFormModel);
+    OperationsForm *operationsForm = new OperationsForm(this->operationFormModel);
     ui->mainTabWidget->addTab(operationsForm, tr("Renaming"));
 
     statusBar()->showMessage(tr("Ready"));
@@ -82,7 +81,7 @@ void MainWindow::on_renameButton_clicked()
 
 void MainWindow::on_clearAllButton_clicked()
 {
-    renamerModel->clear();
+    renamerModel->clearAndDelete();
     ui->tableView->resizeColumnsToContents();
     allowPreview(false);
     ui->renameButton->setEnabled(false);

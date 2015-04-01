@@ -1,6 +1,3 @@
-#include <QtCore/QtDebug>
-#include <QtCore/QDir>
-#include <QtCore/QDirIterator>
 #include <QtGui/QIcon>
 #include <QtGui/QBrush>
 #include "renamermodel.h"
@@ -24,6 +21,10 @@ Qt::ItemFlags RenamerModel::flags(const QModelIndex &index) const
     return Qt::ItemIsEnabled | Qt::ItemNeverHasChildren | Qt::ItemIsSelectable;
 }
 
+/**
+ * @brief RenamerModel::isEmpty
+ * @return @c true if the model contains no items, @c false otherwise
+ */
 bool RenamerModel::isEmpty() const
 {
     return itemsList.isEmpty();
@@ -47,13 +48,13 @@ QVariant RenamerModel::data(const QModelIndex &index, int role) const
     }
     if (role == Qt::ToolTipRole) {
         RenamerItem *item = itemsList.at(index.row());
-        data = item->absolutePath;
+        data = item->path();
     }
     else if (role == Qt::DisplayRole || role == Qt::EditRole) {
         RenamerItem *item = itemsList.at(index.row());
         switch (index.column()) {
         case 0:
-            data = item->absolutePath;
+            data = item->path();
             break;
         case 1:
             data = item->oldName();
@@ -116,11 +117,15 @@ QVariant RenamerModel::headerData(int section, Qt::Orientation orientation, int 
     return QVariant();
 }
 
-void RenamerModel::clear()
+/**
+ * @brief RenamerModel::clearAndDelete
+ * @description Removes all items from the model and deletes them.
+ */
+void RenamerModel::clearAndDelete()
 {
     if (!itemsList.isEmpty()) {
         beginResetModel();
-        qDebug() << "Clearing items...";
+        qCDebug(M3CORE) << "Clearing items...";
         qDeleteAll(itemsList.begin(), itemsList.end());
         itemsList.clear();
         endResetModel();
@@ -133,7 +138,7 @@ int RenamerModel::addFiles(const QStringList &fileList)
     int listSize = fileList.size();
     int endSize = startSize + listSize;
 
-    qDebug() << "Adding" << listSize << "files...";
+    qCDebug(M3CORE) << "Adding" << listSize << "files...";
 
     beginInsertRows(parentItem, startSize, endSize - 1);
 
@@ -147,7 +152,7 @@ int RenamerModel::addFiles(const QStringList &fileList)
     endInsertRows();
     int elapsedTime = timer.elapsed();
     int itemCount = endSize - startSize;
-    qDebug() << "Loaded" << itemCount << "items in" << elapsedTime << "msec";
+    qCDebug(M3CORE) << "Loaded" << itemCount << "items in" << elapsedTime << "msec";
     QString message = tr("Loaded %n item(s)", "", itemCount);
     emit operationCompleted(message);
     return itemCount;
@@ -155,11 +160,9 @@ int RenamerModel::addFiles(const QStringList &fileList)
 
 void RenamerModel::addFile(const QFileInfo &fileInfo)
 {
-    //qDebug() << "file:" << fileInfo.fileName();
     RenamerItem *item = new RenamerItem();
-    item->absolutePath = fileInfo.absolutePath();
-    item->completeBaseName = fileInfo.completeBaseName();
-    item->completeSuffix = fileInfo.completeSuffix();
+    item->setPath(fileInfo.absolutePath());
+    item->setOldName(fileInfo.completeBaseName(), fileInfo.completeSuffix());
     item->isDir = fileInfo.isDir();
     itemsList.append(item);
 }
@@ -181,7 +184,7 @@ int RenamerModel::addDirectories(const QStringList &directoryList,
     if (hidden) {
         filter = filter | QDir::Hidden;
     }
-    qDebug() << "Adding" << directoryList.size() << "directories...";
+    qCDebug(M3CORE) << "Adding" << directoryList.size() << "directories...";
     int itemCount = 0;
     for (int i = 0; i < directoryList.size(); i++) {
         itemCount += addDirectory(directoryList.at(i), recursive, nameFilters, filter);
@@ -196,14 +199,14 @@ int RenamerModel::addDirectory(const QString &path,
 {
     QDir dir(path);
     if (!dir.exists(path)) {
-        qWarning() << QString("Path doesn't exist: %1").arg(path);
+        qCWarning(M3CORE) << QString("Path doesn't exist: %1").arg(path);
         return false;
     }
     dir.setNameFilters(nameFilters);
 
     dir.setFilter(filter | QDir::NoDotAndDotDot);
 
-    qDebug() << "Opening:" << path;
+    qCDebug(M3CORE) << "Opening:" << path;
 
     QDirIterator::IteratorFlags flags;
     if (recursive) {
@@ -226,7 +229,7 @@ int RenamerModel::addDirectory(const QString &path,
 
     int elapsedTime = timer.elapsed();
     int itemCount = endSize - startSize;
-    qDebug() << "Loaded" << itemCount << "items in" << elapsedTime << "msec";
+    qCDebug(M3CORE) << "Loaded" << itemCount << "items in" << elapsedTime << "msec";
     QString message = QString(tr("Loaded %n item(s)", "", itemCount));
     emit operationCompleted(message);
     return itemCount;
@@ -260,7 +263,7 @@ void RenamerModel::sort(int column, Qt::SortOrder order)
 
     int elapsedTime = timer.elapsed();
     emit dataChanged(createIndex(-1,0), createIndex(itemCount,columnCount()));
-    qDebug() << "Sorted" << itemCount << "items in" << elapsedTime << "msec";
+    qCDebug(M3CORE) << "Sorted" << itemCount << "items in" << elapsedTime << "msec";
     QString message = QString(tr("Sorted %n item(s)", "", itemCount));
     emit operationCompleted(message);
 }
@@ -274,9 +277,9 @@ int RenamerModel::applyRenamingOps()
 {
     int itemCount = rowCount();
     if (itemCount == 0) {
-        return false;
+        return 0;
     }
-    qDebug() << "Applying rules on" << itemCount << "items";
+    qCDebug(M3CORE) << "Applying operations on" << itemCount << "items";
     QElapsedTimer timer;
     timer.start();
 
@@ -289,31 +292,35 @@ int RenamerModel::applyRenamingOps()
     }
     int elapsedTime = timer.elapsed();
     emit dataChanged(createIndex(-1,0), createIndex(itemCount,columnCount()));
-    qDebug() << "Applied rules on" << itemCount << "items in" << elapsedTime << "msec";
+    qCDebug(M3CORE) << "Applied rules on" << itemCount << "items in" << elapsedTime << "msec";
     QString message = tr("Applied rules on %n item(s)", "", itemCount);
     emit operationCompleted(message);
     return changedCount;
 }
 
-bool RenamerModel::renameItems()
+int RenamerModel::renameItems()
 {
     int itemCount = rowCount();
     if (itemCount == 0) {
-        return false;
+        return 0;
     }
-    qDebug() << "Renaming" << itemCount << "items";
+    qCDebug(M3CORE) << "Renaming" << itemCount << "items";
     QElapsedTimer timer;
     timer.start();
 
     QDir d;
+    int renamedCount = 0;
     for (int i = 0; i < itemCount; ++i) {
         RenamerItem *item = itemsList.at(i);
-        d.rename(item->oldName(true), item->newName(true));
+        bool renamed = d.rename(item->oldName(true), item->newName(true));
+        if (renamed) {
+            renamedCount += 1;
+        }
     }
     int elapsedTime = timer.elapsed();
     emit dataChanged(createIndex(-1,0), createIndex(itemCount,columnCount()));
-    qDebug() << "Renamed" << itemCount << "items in" << elapsedTime << "msec";
+    qCDebug(M3CORE) << "Renamed" << itemCount << "items in" << elapsedTime << "msec";
     QString message = tr("Renamed %n item(s)", "", itemCount);
     emit operationCompleted(message);
-    return true;
+    return renamedCount;
 }

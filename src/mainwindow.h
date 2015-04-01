@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QtWidgets/QMainWindow>
+#include <QtCore/QLoggingCategory>
 #include "core/renamermodel.h"
 #include "operationformmodel.h"
 

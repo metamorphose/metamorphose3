@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/image/icon">
+        <file>image/icon/metamorphose.ico</file>
+    </qresource>
+</RCC>

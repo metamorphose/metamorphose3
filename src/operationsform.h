@@ -19,8 +19,17 @@ public:
 private slots:
     void on_addOperation_activated(int index);
     void on_operationsTable_activated(const QModelIndex &index);
+    void on_deleteOperation_activated(int index);
+
+    void operationFormModel_rowsInserted();
+
+    void on_applyToName_clicked(bool checked);
+
+    void on_applyToExtension_clicked(bool checked);
 
 private:
+    void setActionsEnabled(bool enable);
+
     Ui::OperationsForm *ui;
     OperationFormModel *operationFormModel;
 };

@@ -13,6 +13,8 @@ public:
     explicit OperationFormItem(QWidget *parent = 0);
     virtual OperationItem* getOperation() = 0;
     virtual void configureOperation() = 0;
+    bool applyToName = true;
+    bool applyToExtension = false;
 };
 
 #endif // OPERATIONFORMITEM

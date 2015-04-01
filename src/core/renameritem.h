@@ -1,7 +1,10 @@
 #ifndef RENAMERITEM_H
 #define RENAMERITEM_H
 
-#include <QtCore>
+#include <QtCore/QObject>
+#include <QtCore/QDir>
+#include <QtCore/QDirIterator>
+#include <QtCore/QElapsedTimer>
 #include "operationmodel.h"
 
 class RenamerItem : public QObject
@@ -19,15 +22,16 @@ public:
     bool hasWarning();
     bool hasError();
     static bool itemCompare(RenamerItem *i, RenamerItem *j, Qt::SortOrder order);
+    void setOldName(QString name, QString extension);
+    void setPath(QString path);
+    QString path();
 
-    QString absolutePath;
-    QString completeBaseName;
-    QString completeSuffix;
     bool isDir;
-    QString newBaseName;
-    QString newSuffix;
 
 private:
+    std::pair<QString, QString> oldNameSplit;
+    std::pair<QString, QString> newNameSplit;
+    QString absolutePath;
     bool nameChanged = false;
     int errorCode = 0;
 };

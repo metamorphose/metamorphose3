@@ -1,5 +1,6 @@
-#include <QtCore/QtDebug>
 #include "renameritem.h"
+
+Q_LOGGING_CATEGORY(M3CORE, "core")
 
 RenamerItem::RenamerItem(QObject *parent)
     : QObject(parent)
@@ -7,16 +8,32 @@ RenamerItem::RenamerItem(QObject *parent)
 
 }
 
+void RenamerItem::setOldName(QString name, QString extension)
+{
+    oldNameSplit.first = name;
+    oldNameSplit.second = extension;
+}
+
+void RenamerItem::setPath(QString path)
+{
+    absolutePath = path;
+}
+
+QString RenamerItem::path()
+{
+    return absolutePath;
+}
+
 QString RenamerItem::oldName(const bool &absolute) const
 {
     QString oldName;
-    if (!completeSuffix.isEmpty()) {
+    if (!oldNameSplit.second.isEmpty()) {
         oldName = QString("%1.%2")
-                        .arg(completeBaseName)
-                        .arg(completeSuffix);
+                        .arg(oldNameSplit.first)
+                        .arg(oldNameSplit.second);
     }
     else {
-        oldName = completeBaseName;
+        oldName = oldNameSplit.first;
     }
 
     if (absolute) {
@@ -27,17 +44,17 @@ QString RenamerItem::oldName(const bool &absolute) const
 
 QString RenamerItem::newName(const bool &absolute) const
 {
-    if (newBaseName.isEmpty()) {
+    if (newNameSplit.first.isEmpty()) {
         return oldName(absolute);
     }
     QString newName;
-    if (!newSuffix.isEmpty()) {
+    if (!newNameSplit.second.isEmpty()) {
         newName = QString("%1.%2")
-                        .arg(newBaseName)
-                        .arg(newSuffix);
+                        .arg(newNameSplit.first)
+                        .arg(newNameSplit.second);
     }
     else {
-        newName = newBaseName;
+        newName = newNameSplit.first;
     }
 
     if (absolute) {
@@ -63,21 +80,15 @@ bool RenamerItem::hasError()
 
 bool RenamerItem::applyRenameOps(const int &index, OperationModel* operations)
 {
-    newBaseName.clear();
-    newSuffix.clear();
+    newNameSplit.first.clear();
+    newNameSplit.second.clear();
 
-    newBaseName = operations->applyOperations(index, completeBaseName);
-    newSuffix = completeSuffix;
+    newNameSplit = operations->applyOperations(index, oldNameSplit);
 
-    qDebug() << completeBaseName << "=>" << newBaseName;
+    qCDebug(M3CORE) << oldNameSplit.first << oldNameSplit.second
+                    << "=>" << newNameSplit.first << newNameSplit.second;
 
-    if (newBaseName != completeBaseName
-        || newSuffix != completeSuffix) {
-        nameChanged = true;
-    }
-    else {
-        nameChanged = false;
-    }
+    nameChanged = (newNameSplit != oldNameSplit);
     return nameChanged;
 }
 

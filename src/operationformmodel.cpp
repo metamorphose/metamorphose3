@@ -1,10 +1,11 @@
-#include <QtCore/QtDebug>
 #include "operationformmodel.h"
+
+Q_LOGGING_CATEGORY(M3GUI, "gui")
 
 OperationFormModel::OperationFormModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
-    operations = new OperationModel(this);
+    operations = new OperationModel();
 }
 
 OperationFormModel::~OperationFormModel()
@@ -65,30 +66,62 @@ QVariant OperationFormModel::data(const QModelIndex &index, int role) const
         QWidget *opForm = opFormList.at(index.row());
         switch (index.column()) {
         case 0:
-            data = opForm->isEnabled();
+            //data = opForm->isEnabled();
             break;
         case 1:
-            data = "Insert";
+            data = opForm->objectName();
             break;
         default:
             break;
         }
     }
+    else if (role == Qt::CheckStateRole && index.column() == 0) {
+        QWidget *opForm = opFormList.at(index.row());
+        if (opForm->isEnabled()) {
+            data = Qt::Checked;
+        }
+        else {
+            data = Qt::Unchecked;
+        }
+    }
     return data;
+}
+
+bool OperationFormModel::removeRows(int row, int count,
+                                    const QModelIndex &parent)
+{
+    if ((count < 1) || (row < 0) || ((row + count) > rowCount())) {
+        return false;
+    }
+    beginRemoveRows(parentItem, row, row + count - 1);
+    opFormList.begin();
+    for (int i = 0; i < count; ++i) {
+        OperationFormItem *opForm = opFormList.takeAt(row);
+        qCDebug(M3GUI) << "Remove" << opForm->objectName() << "at pos" << row + i;
+        delete opForm;
+    }
+    endRemoveRows();
+    return true;
 }
 
 void OperationFormModel::addOperationForm(OperationFormItem *opForm)
 {
     int size = opFormList.size();
     beginInsertRows(parentItem, size, size);
-    qDebug() << "Append" << opForm->objectName();
+    qCDebug(M3GUI) << "Append" << opForm->objectName();
     opFormList.append(opForm);
     endInsertRows();
+}
+
+OperationFormItem* OperationFormModel::getOperationAt(int row)
+{
+    return opFormList.at(row);
 }
 
 OperationModel* OperationFormModel::getOperations()
 {
     operations->clear();
+    qCDebug(M3GUI) << "Configuring" << opFormList.size() << "operation(s)";
     for (OperationFormItem *opForm : opFormList) {
         opForm->configureOperation();
         operations->addOperation(opForm->getOperation());

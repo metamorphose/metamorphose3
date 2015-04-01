@@ -1,5 +1,6 @@
 #ifndef DIRMODEL
 #define DIRMODEL
+
 #include <QtCore/QAbstractTableModel>
 #include "renameritem.h"
 
@@ -29,9 +30,9 @@ public:
     int addFiles(const QStringList &fileList);
     bool isEmpty() const;
     int applyRenamingOps();
-    bool renameItems();
+    int renameItems();
     void setOperations(OperationModel *operationModel);
-    void clear();
+    void clearAndDelete();
 
 signals:
     void operationCompleted(QString message);

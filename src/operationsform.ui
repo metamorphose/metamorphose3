@@ -17,6 +17,32 @@
    <property name="sizeConstraint">
     <enum>QLayout::SetDefaultConstraint</enum>
    </property>
+   <item row="0" column="4">
+    <widget class="QCheckBox" name="applyToName">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>name</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3">
+    <widget class="QLabel" name="applyLabel">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>Apply to:</string>
+     </property>
+     <property name="indent">
+      <number>25</number>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="0">
     <widget class="QComboBox" name="addOperation">
      <property name="sizePolicy">
@@ -40,16 +66,6 @@
        <string>Insert</string>
       </property>
      </item>
-    </widget>
-   </item>
-   <item row="1" column="1" colspan="3">
-    <widget class="QStackedWidget" name="operationsView">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
     </widget>
    </item>
    <item row="1" column="0">
@@ -83,7 +99,9 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset theme="go-down"/>
+      <iconset theme="go-down">
+       <normaloff/>
+      </iconset>
      </property>
     </widget>
    </item>
@@ -96,7 +114,65 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset theme="go-up"/>
+      <iconset theme="go-up">
+       <normaloff/>
+      </iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="6">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="0" column="5">
+    <widget class="QCheckBox" name="applyToExtension">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>extension</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="7">
+    <widget class="QComboBox" name="deleteOperation">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Delete</string>
+      </property>
+      <property name="icon">
+       <iconset theme="edit-delete"/>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Delete All</string>
+      </property>
+      <property name="icon">
+       <iconset theme="edit-clear"/>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="7">
+    <widget class="QStackedWidget" name="operationsView">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
     </widget>
    </item>

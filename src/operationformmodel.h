@@ -6,6 +6,7 @@
 #include "operationformitem.h"
 #include "core/operationmodel.h"
 
+Q_DECLARE_LOGGING_CATEGORY(M3GUI)
 
 class OperationFormModel : public QAbstractTableModel
 {
@@ -20,7 +21,9 @@ public:
                         int role = Qt::DisplayRole) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
     void addOperationForm(OperationFormItem *opForm);
+    OperationFormItem* getOperationAt(int row);
     OperationModel* getOperations();
     bool isEmpty() const;
 

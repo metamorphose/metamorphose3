@@ -46,4 +46,6 @@ void InsertForm::configureOperation()
         insertOperation->setPositionType(InsertOperation::Fixed);
         insertOperation->setPosition(ui->position->value());
     }
+    insertOperation->setApplyToExtension(applyToExtension);
+    insertOperation->setApplyToName(applyToName);
 }

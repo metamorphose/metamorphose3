@@ -1,4 +1,3 @@
-#include <QtCore/QtDebug>
 #include <QtWidgets/QFileDialog>
 
 #include "selectionform.h"

@@ -1,8 +1,8 @@
 #ifndef OPERATIONMODEL_H
 #define OPERATIONMODEL_H
+
 #include <QtCore/QAbstractTableModel>
 #include "operationitem.h"
-
 
 class OperationModel : public QAbstractTableModel
 {
@@ -20,7 +20,7 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     void addOperation(OperationItem *operation);
-    QString applyOperations(const int &index, QString &filename);
+    std::pair<QString, QString> applyOperations(const int &index, std::pair<QString, QString> oldName);
     void clear();
     bool isEmpty();
 
