@@ -123,8 +123,10 @@ OperationModel* OperationFormModel::getOperations()
     operations->clear();
     qCDebug(M3GUI) << "Configuring" << opFormList.size() << "operation(s)";
     for (OperationFormItem *opForm : opFormList) {
-        opForm->configureOperation();
-        operations->addOperation(opForm->getOperation());
+        if (opForm->isEnabled()) {
+            opForm->configureOperation();
+            operations->addOperation(opForm->getOperation());
+        }
     }
     return operations;
 }

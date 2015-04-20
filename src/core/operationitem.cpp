@@ -10,16 +10,6 @@ void OperationItem::applyOperation(int itemPosition, std::pair<QString, QString>
     }
 }
 
-void OperationItem::setEnabled(bool enabled)
-{
-    this->enabled = enabled;
-}
-
-bool OperationItem::isEnabled()
-{
-    return enabled;
-}
-
 void OperationItem::setApplyToName(bool apply)
 {
     applyToName = apply;

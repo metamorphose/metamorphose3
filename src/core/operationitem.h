@@ -12,8 +12,6 @@ class OperationItem : public QObject
 
 public:
     void applyOperation(int itemPosition, std::pair<QString, QString> &name);
-    void setEnabled(bool enabled);
-    bool isEnabled();
     void setApplyToName(bool apply);
     void setApplyToExtension(bool apply);
 
@@ -21,7 +19,6 @@ protected:
     virtual void operation(QString &name) = 0;
 
 private:
-    bool enabled = true;
     bool applyToName = true;
     bool applyToExtension = false;
 };

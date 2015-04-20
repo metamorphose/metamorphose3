@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="toolTipDuration">
+   <number>2</number>
+  </property>
   <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">
     <rect>
@@ -67,6 +70,9 @@
       <property name="enabled">
        <bool>true</bool>
       </property>
+      <property name="toolTip">
+       <string>Add individual files</string>
+      </property>
       <property name="text">
        <string>Add Files</string>
       </property>
@@ -84,15 +90,11 @@
     </item>
     <item>
      <widget class="QPushButton" name="addDirButton">
+      <property name="toolTip">
+       <string>Add directory contents</string>
+      </property>
       <property name="text">
        <string>Add Directory</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QCheckBox" name="addRecursive">
-      <property name="text">
-       <string>Recursive</string>
       </property>
      </widget>
     </item>
@@ -119,6 +121,13 @@
       </property>
       <property name="checked">
        <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="addRecursive">
+      <property name="text">
+       <string>Recursive</string>
       </property>
      </widget>
     </item>

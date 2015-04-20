@@ -1,7 +1,7 @@
 #ifndef OPERATIONFORMITEM
 #define OPERATIONFORMITEM
 
-#include <QtCore>
+#include <QtCore/QObject>
 #include <QtWidgets/QWidget>
 #include "core/operationitem.h"
 
