@@ -24,9 +24,9 @@ public:
     int addDirectories(const QStringList &directoryList,
                         const bool &recursive,
                         const QStringList nameFilters,
-                        const bool &files,
-                        const bool &folders,
-                        const bool &hidden);
+                        const bool files,
+                        const bool folders,
+                        const bool hidden);
     int addFiles(const QStringList &fileList);
     bool isEmpty() const;
     int applyRenamingOps();

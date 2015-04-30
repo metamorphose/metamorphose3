@@ -81,7 +81,7 @@ QVariant RenamerModel::data(const QModelIndex &index, int role) const
     }
     else if (role == Qt::DecorationRole && index.column() == 0) {
         RenamerItem *item = itemsList.at(index.row());
-        if (item->isDir) {
+        if (item->isDir()) {
             return QIcon::fromTheme("folder");
         }
         return QIcon::fromTheme("text-x-generic");
@@ -132,6 +132,12 @@ void RenamerModel::clearAndDelete()
     }
 }
 
+/**
+ * @brief RenamerModel::addFiles
+ * @description Add a list of files to the model.
+ * @param fileList
+ * @return the number of files added.
+ */
 int RenamerModel::addFiles(const QStringList &fileList)
 {
     int startSize = itemsList.size();
@@ -160,19 +166,25 @@ int RenamerModel::addFiles(const QStringList &fileList)
 
 void RenamerModel::addFile(const QFileInfo &fileInfo)
 {
+    if (!fileInfo.isWritable()) {
+        qCWarning(M3CORE) << "Not writable:" << fileInfo.absoluteFilePath();
+        return;
+    }
     RenamerItem *item = new RenamerItem();
     item->setPath(fileInfo.absolutePath());
     item->setOldName(fileInfo.completeBaseName(), fileInfo.completeSuffix());
-    item->isDir = fileInfo.isDir();
+    item->setIsDir(fileInfo.isDir());
+    item->setCreated(fileInfo.created());
+    item->setLastModified(fileInfo.lastModified());
     itemsList.append(item);
 }
 
 int RenamerModel::addDirectories(const QStringList &directoryList,
                               const bool &recursive,
                               const QStringList nameFilters,
-                              const bool &files,
-                              const bool &folders,
-                              const bool &hidden)
+                              const bool files,
+                              const bool folders,
+                              const bool hidden)
 {
     QDir::Filters filter;
     if (files) {

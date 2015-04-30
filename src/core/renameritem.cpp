@@ -28,6 +28,26 @@ QString RenamerItem::path()
     return absolutePath;
 }
 
+void RenamerItem::setIsDir(bool isDir)
+{
+    isDirectory = isDir;
+}
+
+bool RenamerItem::isDir()
+{
+    return isDirectory;
+}
+
+void RenamerItem::setCreated(QDateTime created)
+{
+    this->created = created;
+}
+
+void RenamerItem::setLastModified(QDateTime lastModified)
+{
+    this->lastModified = lastModified;
+}
+
 QString RenamerItem::oldName(const bool &absolute) const
 {
     QString oldName;
@@ -98,8 +118,8 @@ bool RenamerItem::applyRenameOps(const int &index, OperationModel* operations)
 
 bool RenamerItem::itemCompare(RenamerItem *i, RenamerItem *j, Qt::SortOrder order)
 {
-    if (i->isDir != j->isDir) {
-        return i->isDir;
+    if (i->isDirectory != j->isDirectory) {
+        return i->isDirectory;
     }
     int compare = i->oldName(true).localeAwareCompare(j->oldName(true));
     if (order == Qt::AscendingOrder && compare < 0) {

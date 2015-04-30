@@ -5,6 +5,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QDirIterator>
 #include <QtCore/QElapsedTimer>
+#include <QtCore/QDateTime>
 #include "operationmodel.h"
 
 class RenamerItem : public QObject
@@ -25,8 +26,10 @@ public:
     void setOldName(QString name, QString extension);
     void setPath(QString path);
     QString path();
-
-    bool isDir;
+    void setIsDir(bool isDir);
+    bool isDir();
+    void setCreated(QDateTime created);
+    void setLastModified(QDateTime lastModified);
 
 private:
     std::pair<QString, QString> oldNameSplit;
@@ -34,6 +37,9 @@ private:
     QString absolutePath;
     bool nameChanged = false;
     int errorCode = 0;
+    bool isDirectory;
+    QDateTime created;
+    QDateTime lastModified;
 };
 
 #endif // RENAMERITEM_H
