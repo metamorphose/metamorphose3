@@ -6,8 +6,6 @@
 #include "operationformitem.h"
 #include "core/operationmodel.h"
 
-Q_DECLARE_LOGGING_CATEGORY(M3GUI)
-
 class OperationFormModel : public QAbstractTableModel
 {
 public:

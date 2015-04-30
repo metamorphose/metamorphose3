@@ -1,12 +1,16 @@
 #include "operation/insertform.h"
 #include "ui_insertform.h"
+#include "ui_operationformitem.h"
 
 InsertForm::InsertForm(QWidget *parent) :
     OperationFormItem(parent),
     ui(new Ui::InsertForm)
 {
-    ui->setupUi(this);
+    qCDebug(M3GUI) << "init InsertForm";
+
     insertOperation = new InsertOperation();
+
+    ui->setupUi(formItemUi->operation);
 
     ui->positionSelection->setId(ui->asPrefix, 0);
     ui->positionSelection->setId(ui->asSuffix, 1);
@@ -48,4 +52,9 @@ void InsertForm::configureOperation()
     }
     insertOperation->setApplyToExtension(applyToExtension);
     insertOperation->setApplyToName(applyToName);
+}
+
+QString InsertForm::name()
+{
+    return tr("Insert Operation");
 }

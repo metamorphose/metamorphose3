@@ -24,9 +24,9 @@ SOURCES += main.cpp\
     core/renameritem.cpp \
     core/insertoperation.cpp \
     operationformmodel.cpp \
-    operationformitem.cpp \
     suboperationsform.cpp \
-    core/operationitem.cpp
+    core/operationitem.cpp \
+    operationformitem.cpp
 
 HEADERS  += mainwindow.h \
     core/renamermodel.h \
@@ -37,15 +37,16 @@ HEADERS  += mainwindow.h \
     core/operationmodel.h \
     core/insertoperation.h \
     operationformmodel.h \
-    operationformitem.h \
     core/operationitem.h \
-    suboperationsform.h
+    suboperationsform.h \
+    operationformitem.h
 
 FORMS    += mainwindow.ui \
     operationsform.ui \
     operation/insertform.ui \
     selectionform.ui \
-    suboperationsform.ui
+    suboperationsform.ui \
+    operationformitem.ui
 
 RESOURCES += \
     resources.qrc

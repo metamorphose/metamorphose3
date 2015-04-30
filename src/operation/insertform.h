@@ -17,6 +17,7 @@ public:
     ~InsertForm();
     OperationItem* getOperation() override;
     void configureOperation() override;
+    QString name() override;
 
 private slots:
     void on_positionSelection_buttonClicked(int id);

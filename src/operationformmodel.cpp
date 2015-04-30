@@ -63,20 +63,20 @@ QVariant OperationFormModel::data(const QModelIndex &index, int role) const
         data = "tooltip data";
     }
     else if (role == Qt::DisplayRole || role == Qt::EditRole) {
-        QWidget *opForm = opFormList.at(index.row());
+        OperationFormItem *opForm = opFormList.at(index.row());
         switch (index.column()) {
         case 0:
             //data = opForm->isEnabled();
             break;
         case 1:
-            data = opForm->objectName();
+            data = opForm->name();
             break;
         default:
             break;
         }
     }
     else if (role == Qt::CheckStateRole && index.column() == 0) {
-        QWidget *opForm = opFormList.at(index.row());
+        OperationFormItem *opForm = opFormList.at(index.row());
         if (opForm->isEnabled()) {
             data = Qt::Checked;
         }
@@ -97,7 +97,7 @@ bool OperationFormModel::removeRows(int row, int count,
     opFormList.begin();
     for (int i = 0; i < count; ++i) {
         OperationFormItem *opForm = opFormList.takeAt(row);
-        qCDebug(M3GUI) << "Remove" << opForm->objectName() << "at pos" << row + i;
+        qCDebug(M3GUI) << "Remove" << opForm->name() << "at pos" << row + i;
         delete opForm;
     }
     endRemoveRows();
@@ -108,7 +108,7 @@ void OperationFormModel::addOperationForm(OperationFormItem *opForm)
 {
     int size = opFormList.size();
     beginInsertRows(parentItem, size, size);
-    qCDebug(M3GUI) << "Append" << opForm->objectName();
+    qCDebug(M3GUI) << "Append" << opForm->name();
     opFormList.append(opForm);
     endInsertRows();
 }
