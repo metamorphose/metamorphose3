@@ -97,7 +97,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Add this:</string>
+      <string>Insert this:</string>
      </property>
     </widget>
    </item>

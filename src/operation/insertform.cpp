@@ -11,6 +11,7 @@ InsertForm::InsertForm(QWidget *parent) :
     insertOperation = new InsertOperation();
 
     ui->setupUi(formItemUi->operation);
+    init(ui->toInsert);
 
     ui->positionSelection->setId(ui->asPrefix, 0);
     ui->positionSelection->setId(ui->asSuffix, 1);
@@ -22,6 +23,9 @@ InsertForm::~InsertForm()
     delete ui;
 }
 
+/**
+ * Handle enabling the postion spinner.
+ */
 void InsertForm::on_positionSelection_buttonClicked(int id)
 {
     if (id == 2) {

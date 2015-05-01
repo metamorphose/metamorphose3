@@ -20,7 +20,6 @@ void RenamerItem::setPath(QString path)
 }
 
 /**
- * @brief RenamerItem::path
  * @return the absolute path of the item.
  */
 QString RenamerItem::path()

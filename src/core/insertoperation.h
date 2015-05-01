@@ -20,7 +20,7 @@ public:
     void setTextToInsert(QString text);
 
 protected:
-    void operation(QString &name) override;
+    void operation(int itemPosition, QString &name) override;
 
 private:
     PositionTypes positionType;

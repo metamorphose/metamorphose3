@@ -3,6 +3,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QLoggingCategory>
+#include <QtCore/QDateTime>
 
 Q_DECLARE_LOGGING_CATEGORY(M3CORE)
 
@@ -14,9 +15,10 @@ public:
     void applyOperation(int itemPosition, std::pair<QString, QString> &name);
     void setApplyToName(bool apply);
     void setApplyToExtension(bool apply);
+    void parseSubOps(int itemPosition, QString &text);
 
 protected:
-    virtual void operation(QString &name) = 0;
+    virtual void operation(int itemPosition, QString &name) = 0;
 
 private:
     bool applyToName = true;

@@ -1,7 +1,9 @@
 #include "insertoperation.h"
 
-void InsertOperation::operation(QString &name)
+void InsertOperation::operation(int itemPosition, QString &name)
 {
+    parseSubOps(itemPosition, textToInsert);
+
     switch (positionType) {
     case Prefix:
         name.prepend(textToInsert);
@@ -18,7 +20,7 @@ void InsertOperation::operation(QString &name)
         }
         break;
     default:
-        qCWarning(M3CORE, "unhandled PositionType");
+        qCWarning(M3CORE) << "unhandled PositionType";
         break;
     }
 }

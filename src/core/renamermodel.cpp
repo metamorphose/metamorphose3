@@ -22,7 +22,6 @@ Qt::ItemFlags RenamerModel::flags(const QModelIndex &index) const
 }
 
 /**
- * @brief RenamerModel::isEmpty
  * @return @c true if the model contains no items, @c false otherwise
  */
 bool RenamerModel::isEmpty() const
@@ -118,8 +117,7 @@ QVariant RenamerModel::headerData(int section, Qt::Orientation orientation, int 
 }
 
 /**
- * @brief RenamerModel::clearAndDelete
- * @description Removes all items from the model and deletes them.
+ * Removes all items from the model and deletes them.
  */
 void RenamerModel::clearAndDelete()
 {
@@ -133,8 +131,7 @@ void RenamerModel::clearAndDelete()
 }
 
 /**
- * @brief RenamerModel::addFiles
- * @description Add a list of files to the model.
+ * Add a list of files to the model.
  * @param fileList
  * @return the number of files added.
  */

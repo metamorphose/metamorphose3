@@ -12,8 +12,7 @@ OperationModel::~OperationModel()
 }
 
 /**
- * @brief OperationModel::clear
- * @description Removes all items from the model.
+ * Removes all items from the model.
  */
 void OperationModel::clear()
 {

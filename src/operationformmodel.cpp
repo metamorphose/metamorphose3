@@ -1,7 +1,5 @@
 #include "operationformmodel.h"
 
-Q_LOGGING_CATEGORY(M3GUI, "gui")
-
 OperationFormModel::OperationFormModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
