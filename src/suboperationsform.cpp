@@ -17,15 +17,15 @@ SubOperationsForm::~SubOperationsForm()
 
 void SubOperationsForm::on_numberingButton_clicked()
 {
-    emit subOperationAdded("::numb::");
+    emit subOperationAdded(":numb:");
 }
 
 void SubOperationsForm::on_dateButton_clicked()
 {
-    emit subOperationAdded("::date::");
+    emit subOperationAdded(":date:");
 }
 
 void SubOperationsForm::on_timeButton_clicked()
 {
-    emit subOperationAdded("::time::");
+    emit subOperationAdded(":time:");
 }

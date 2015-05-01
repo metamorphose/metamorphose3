@@ -9,23 +9,12 @@ OperationFormItem::OperationFormItem(QWidget *parent) :
     formItemUi->setupUi(this);
 }
 
-/**
- * Initialize with suboperations.
- */
-void OperationFormItem::init(QLineEdit *mainInput)
+void OperationFormItem::initSubOperations(QLineEdit *mainInput)
 {
     subOperationsForm = new SubOperationsForm(formItemUi->subOperation);
     connect(subOperationsForm, SIGNAL(subOperationAdded(QString)),
             this, SLOT(insertSubOpText(QString)));
     this->mainInput = mainInput;
-}
-
-/**
- * Initialize without suboperations.
- */
-void OperationFormItem::init()
-{
-
 }
 
 OperationFormItem::~OperationFormItem()
@@ -37,6 +26,7 @@ void OperationFormItem::insertSubOpText(QString text)
 {
     if (mainInput && mainInput->isEnabled()) {
         mainInput->insert(text);
+        mainInput->setFocus();
         return;
     }
     qCWarning(M3GUI, "Can't insert sub-operation text");

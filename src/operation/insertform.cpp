@@ -11,7 +11,7 @@ InsertForm::InsertForm(QWidget *parent) :
     insertOperation = new InsertOperation();
 
     ui->setupUi(formItemUi->operation);
-    init(ui->toInsert);
+    initSubOperations(ui->toInsert);
 
     ui->positionSelection->setId(ui->asPrefix, 0);
     ui->positionSelection->setId(ui->asSuffix, 1);

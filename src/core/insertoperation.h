@@ -15,12 +15,12 @@ public:
         Fixed = 2
     };
     Q_DECLARE_FLAGS(PositionTypes, PositionType)
-    void setPositionType(PositionTypes type);
-    void setPosition(int position);
-    void setTextToInsert(QString text);
+    void setPositionType(const InsertOperation::PositionTypes type);
+    void setPosition(const int position);
+    void setTextToInsert(const QString text);
 
 protected:
-    void operation(int itemPosition, QString &name) override;
+    void operation(QString &name) override;
 
 private:
     PositionTypes positionType;

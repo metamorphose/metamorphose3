@@ -2,49 +2,59 @@
 
 void OperationItem::applyOperation(int itemPosition, std::pair<QString, QString> &name)
 {
+    this->itemPosition = itemPosition;
+
     if (applyToName) {
-        operation(itemPosition, name.first);
+        operation(name.first);
     }
     if (applyToExtension) {
-        operation(itemPosition, name.second);
+        operation(name.second);
     }
 }
 
 /**
  * Innermost loop!
  */
-void OperationItem::parseSubOps(int itemPosition, QString &text)
+QString OperationItem::parseSubOps(const QString text)
 {
     qCDebug(M3CORE) << "parsing for subops" << text;
 
-    QStringList segments = text.split("::", QString::SkipEmptyParts);
+    QStringList segments = text.split(":", QString::SkipEmptyParts);
 
     for (int i = 0; i < segments.size(); ++i) {
         QString segment = segments.at(i);
 
         if (segment == "numb") {
-            segments[i] = QString::number(itemPosition);
+            segments[i] = numbering();
         }
         if (segment == "date") {
-            QDateTime datetime = QDateTime::currentDateTime();
-            segments[i] = datetime.toString("yyyy-MM-dd");
+            segments[i] = datetime("yyyy-MM-dd");
         }
         if (segment == "time") {
-            QDateTime datetime = QDateTime::currentDateTime();
-            segments[i] = datetime.toString("hh-mm-ss");
+            segments[i] = datetime("hh-mm-ss");
         }
-        qCDebug(M3CORE) << segment;
-
-        text = segments.join("");
     }
+    return segments.join("");
 }
 
-void OperationItem::setApplyToName(bool apply)
+void OperationItem::setApplyToName(const bool apply)
 {
     applyToName = apply;
 }
 
-void OperationItem::setApplyToExtension(bool apply)
+void OperationItem::setApplyToExtension(const bool apply)
 {
     applyToExtension = apply;
+}
+
+QString OperationItem::numbering()
+{
+    int numb = itemPosition + 1;
+    return QString("%1").arg(numb, 3, 10, QChar('0'));
+}
+
+QString OperationItem::datetime(const QString format)
+{
+    QDateTime datetime = QDateTime::currentDateTime();
+    return datetime.toString(format);
 }

@@ -1,22 +1,22 @@
 #include "insertoperation.h"
 
-void InsertOperation::operation(int itemPosition, QString &name)
+void InsertOperation::operation(QString &name)
 {
-    parseSubOps(itemPosition, textToInsert);
+    QString parsedText = parseSubOps(textToInsert);
 
     switch (positionType) {
     case Prefix:
-        name.prepend(textToInsert);
+        name.prepend(parsedText);
         break;
     case Suffix:
-        name.append(textToInsert);
+        name.append(parsedText);
         break;
     case Fixed:
         if (atPosition < name.length()) {
-            name.insert(atPosition, textToInsert);
+            name.insert(atPosition, parsedText);
         }
         else {
-            name.append(textToInsert);
+            name.append(parsedText);
         }
         break;
     default:
@@ -25,17 +25,17 @@ void InsertOperation::operation(int itemPosition, QString &name)
     }
 }
 
-void InsertOperation::setPositionType(PositionTypes type)
+void InsertOperation::setPositionType(const PositionTypes type)
 {
     positionType = type;
 }
 
-void InsertOperation::setPosition(int position)
+void InsertOperation::setPosition(const int position)
 {
     atPosition = position;
 }
 
-void InsertOperation::setTextToInsert(QString text)
+void InsertOperation::setTextToInsert(const QString text)
 {
     textToInsert = text;
 }

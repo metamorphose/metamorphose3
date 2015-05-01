@@ -13,12 +13,15 @@ class OperationItem : public QObject
 
 public:
     void applyOperation(int itemPosition, std::pair<QString, QString> &name);
-    void setApplyToName(bool apply);
-    void setApplyToExtension(bool apply);
-    void parseSubOps(int itemPosition, QString &text);
+    void setApplyToName(const bool apply);
+    void setApplyToExtension(const bool apply);
+    QString parseSubOps(const QString text);
+    QString numbering();
+    QString datetime(const QString format);
 
 protected:
-    virtual void operation(int itemPosition, QString &name) = 0;
+    virtual void operation(QString &name) = 0;
+    int itemPosition;
 
 private:
     bool applyToName = true;

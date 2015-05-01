@@ -20,8 +20,7 @@ public:
     virtual OperationItem* getOperation() = 0;
     virtual void configureOperation() = 0;
     virtual QString name() = 0;
-    void init(QLineEdit *mainInput);
-    void init();
+    void initSubOperations(QLineEdit *mainInput);
     bool applyToName = true;
     bool applyToExtension = false;
 
