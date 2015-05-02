@@ -20,13 +20,15 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
+    bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count,
+                  const QModelIndex &destinationParent, int destinationChild) override;
     void addOperationForm(OperationFormItem *opForm);
     OperationFormItem* getOperationAt(int row);
     OperationModel* getOperations();
     bool isEmpty() const;
+    QModelIndex parentItem;
 
 private:
-    QModelIndex parentItem;
     QList<OperationFormItem*> opFormList;
     OperationModel *operations;
 };

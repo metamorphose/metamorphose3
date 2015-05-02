@@ -102,6 +102,16 @@ bool OperationFormModel::removeRows(int row, int count,
     return true;
 }
 
+bool OperationFormModel::moveRows(const QModelIndex &sourceParent, int sourceRow,
+                                  int count, const QModelIndex &destinationParent,
+                                  int destinationChild)
+{
+    if (destinationChild == -1) {
+        return false;
+    }
+    qCDebug(M3GUI) << sourceRow << destinationChild;
+}
+
 void OperationFormModel::addOperationForm(OperationFormItem *opForm)
 {
     int size = opFormList.size();

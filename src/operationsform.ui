@@ -153,7 +153,9 @@
        <string>Delete</string>
       </property>
       <property name="icon">
-       <iconset theme="edit-delete"/>
+       <iconset theme="edit-delete">
+        <normaloff/>
+       </iconset>
       </property>
      </item>
      <item>
@@ -161,7 +163,9 @@
        <string>Delete All</string>
       </property>
       <property name="icon">
-       <iconset theme="edit-clear"/>
+       <iconset theme="edit-clear">
+        <normaloff/>
+       </iconset>
       </property>
      </item>
     </widget>

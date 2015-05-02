@@ -49,11 +49,12 @@ void OperationsForm::on_addOperation_activated(int index)
     ui->addOperation->setCurrentIndex(0);
 }
 
-void OperationsForm::on_operationsTable_activated(const QModelIndex &index)
+void OperationsForm::on_operationsTable_clicked(const QModelIndex &index)
 {
     int row = index.row();
     qCDebug(M3GUI) << "activated operation at row" << row;
     ui->operationsView->setCurrentIndex(row);
+    setApplyToValues(row);
 }
 
 void OperationsForm::operationFormModel_rowsInserted()
@@ -61,11 +62,11 @@ void OperationsForm::operationFormModel_rowsInserted()
     setActionsEnabled(true);
 }
 
-void OperationsForm::setActionsEnabled(bool enable)
+void OperationsForm::setActionsEnabled(const bool enable)
 {
     if (enable && operationFormModel->rowCount() > 1) {
-        //ui->moveOpDown->setEnabled(true);
-        //ui->moveOpUp->setEnabled(true);
+        ui->moveOpDown->setEnabled(true);
+        ui->moveOpUp->setEnabled(true);
     }
     else {
         ui->moveOpUp->setEnabled(false);
@@ -75,6 +76,17 @@ void OperationsForm::setActionsEnabled(bool enable)
     ui->applyLabel->setEnabled(enable);
     ui->applyToName->setEnabled(enable);
     ui->applyToExtension->setEnabled(enable);
+
+    if (enable) {
+        setApplyToValues(ui->operationsView->count());
+    }
+}
+
+void OperationsForm::setApplyToValues(const int row)
+{
+    OperationFormItem *opForm = operationFormModel->getOperationAt(row);
+    ui->applyToName->setChecked(opForm->applyToName);
+    ui->applyToExtension->setChecked(opForm->applyToExtension);
 }
 
 void OperationsForm::on_deleteOperation_activated(int index)
@@ -120,3 +132,18 @@ void OperationsForm::on_applyToExtension_clicked(bool checked)
     OperationFormItem *opForm = operationFormModel->getOperationAt(row);
     opForm->applyToExtension = checked;
 }
+
+void OperationsForm::on_moveOpUp_clicked()
+{
+    int row = ui->operationsView->currentIndex();
+    operationFormModel->moveRow(operationFormModel->parentItem, row,
+                                operationFormModel->parentItem, row - 1);
+}
+
+void OperationsForm::on_moveOpDown_clicked()
+{
+    int row = ui->operationsView->currentIndex();
+    operationFormModel->moveRow(operationFormModel->parentItem, row,
+                                operationFormModel->parentItem, row + 1);
+}
+
