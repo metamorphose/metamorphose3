@@ -7,8 +7,6 @@ OperationsForm::OperationsForm(OperationFormModel *model, QWidget *parent) :
     ui(new Ui::OperationsForm)
 {
     operationFormModel = model;
-    connect(operationFormModel, SIGNAL(rowsInserted(QModelIndex, int, int)),
-            this, SLOT(operationFormModel_rowsInserted()));
 
     ui->setupUi(this);
 
@@ -27,13 +25,7 @@ void OperationsForm::on_addOperation_activated(int index)
     case 1: {
         InsertForm *insertForm = new InsertForm(this);
         operationFormModel->addOperationForm(insertForm);
-
-        ui->operationsView->addWidget(insertForm);
-        int selectedOp = ui->operationsView->count() - 1;
-
-        ui->operationsView->setCurrentIndex(selectedOp);
-        ui->operationsTable->selectRow(selectedOp);
-        ui->operationsTable->resizeColumnsToContents();
+        ui->gridLayout->addWidget(insertForm, 1, 1, 2, ui->gridLayout->columnCount() - 1);
         break;
     }
     case 2: {
@@ -47,19 +39,32 @@ void OperationsForm::on_addOperation_activated(int index)
     }
     // reset the combo box
     ui->addOperation->setCurrentIndex(0);
+
+    ui->operationsTable->resizeColumnsToContents();
+    int selectedOp = operationFormModel->rowCount() - 1;
+    showOperation(selectedOp);
+    setActionsEnabled(true);
+}
+
+void OperationsForm::showOperation(const int row)
+{
+    for (int i = 0; i < operationFormModel->rowCount(); ++i) {
+        OperationFormItem *opForm = operationFormModel->getOperationAt(i);
+        opForm->setVisible(false);
+    }
+    OperationFormItem *opForm = operationFormModel->getOperationAt(row);
+    ui->applyToName->setChecked(opForm->applyToName);
+    ui->applyToExtension->setChecked(opForm->applyToExtension);
+    opForm->setVisible(true);
+
+    ui->operationsTable->selectRow(row);
 }
 
 void OperationsForm::on_operationsTable_clicked(const QModelIndex &index)
 {
     int row = index.row();
+    showOperation(row);
     qCDebug(M3GUI) << "activated operation at row" << row;
-    ui->operationsView->setCurrentIndex(row);
-    setApplyToValues(row);
-}
-
-void OperationsForm::operationFormModel_rowsInserted()
-{
-    setActionsEnabled(true);
 }
 
 void OperationsForm::setActionsEnabled(const bool enable)
@@ -69,40 +74,30 @@ void OperationsForm::setActionsEnabled(const bool enable)
         ui->moveOpUp->setEnabled(true);
     }
     else {
-        ui->moveOpUp->setEnabled(false);
+        ui->moveOpDown->setEnabled(false);
         ui->moveOpUp->setEnabled(false);
     }
     ui->deleteOperation->setEnabled(enable);
     ui->applyLabel->setEnabled(enable);
     ui->applyToName->setEnabled(enable);
     ui->applyToExtension->setEnabled(enable);
-
-    if (enable) {
-        setApplyToValues(ui->operationsView->count());
-    }
+    ui->helpText->setVisible(!enable);
 }
 
-void OperationsForm::setApplyToValues(const int row)
-{
-    OperationFormItem *opForm = operationFormModel->getOperationAt(row);
-    ui->applyToName->setChecked(opForm->applyToName);
-    ui->applyToExtension->setChecked(opForm->applyToExtension);
-}
-
-void OperationsForm::on_deleteOperation_activated(int index)
+void OperationsForm::on_deleteOperation_activated(const int index)
 {
     switch (index) {
     // delete a single operation
     case 0: {
-        int currentOpIndex = ui->operationsView->currentIndex();
-        operationFormModel->removeRows(currentOpIndex, 1);
+        int currentRow = ui->operationsTable->currentIndex().row();
+        operationFormModel->removeRows(currentRow, 1);
 
         int opCount = operationFormModel->rowCount();
-        if (opCount > 0) {
-            ui->operationsView->setCurrentIndex(opCount - 1);
+        if (opCount < 1) {
+            setActionsEnabled(false);
         }
         else {
-            setActionsEnabled(false);
+            showOperation(0);
         }
         break;
     }
@@ -121,28 +116,28 @@ void OperationsForm::on_deleteOperation_activated(int index)
 
 void OperationsForm::on_applyToName_clicked(bool checked)
 {
-    int row = ui->operationsView->currentIndex();
+    int row = ui->operationsTable->currentIndex().row();
     OperationFormItem *opForm = operationFormModel->getOperationAt(row);
     opForm->applyToName = checked;
 }
 
 void OperationsForm::on_applyToExtension_clicked(bool checked)
 {
-    int row = ui->operationsView->currentIndex();
+    int row = ui->operationsTable->currentIndex().row();
     OperationFormItem *opForm = operationFormModel->getOperationAt(row);
     opForm->applyToExtension = checked;
 }
 
 void OperationsForm::on_moveOpUp_clicked()
 {
-    int row = ui->operationsView->currentIndex();
+    int row = ui->operationsTable->currentIndex().row();
     operationFormModel->moveRow(operationFormModel->parentItem, row,
                                 operationFormModel->parentItem, row - 1);
 }
 
 void OperationsForm::on_moveOpDown_clicked()
 {
-    int row = ui->operationsView->currentIndex();
+    int row = ui->operationsTable->currentIndex().row();
     operationFormModel->moveRow(operationFormModel->parentItem, row,
                                 operationFormModel->parentItem, row + 1);
 }

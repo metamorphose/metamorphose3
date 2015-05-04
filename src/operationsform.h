@@ -19,15 +19,14 @@ public:
 private slots:
     void on_addOperation_activated(int index);
     void on_operationsTable_clicked(const QModelIndex &index);
-    void on_deleteOperation_activated(int index);
-    void operationFormModel_rowsInserted();
+    void on_deleteOperation_activated(const int index);
     void on_applyToName_clicked(bool checked);
     void on_applyToExtension_clicked(bool checked);
     void on_moveOpUp_clicked();
     void on_moveOpDown_clicked();
-    void setApplyToValues(const int row);
 
 private:
+    void showOperation(const int row);
     void setActionsEnabled(const bool enable);
 
     Ui::OperationsForm *ui;

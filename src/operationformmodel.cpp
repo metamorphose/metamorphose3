@@ -92,7 +92,6 @@ bool OperationFormModel::removeRows(int row, int count,
         return false;
     }
     beginRemoveRows(parentItem, row, row + count - 1);
-    opFormList.begin();
     for (int i = 0; i < count; ++i) {
         OperationFormItem *opForm = opFormList.takeAt(row);
         qCDebug(M3GUI) << "Remove" << opForm->name() << "at pos" << row + i;
@@ -109,7 +108,25 @@ bool OperationFormModel::moveRows(const QModelIndex &sourceParent, int sourceRow
     if (destinationChild == -1) {
         return false;
     }
-    qCDebug(M3GUI) << sourceRow << destinationChild;
+    int sourceLast = sourceRow + count - 1;
+    if (destinationChild > sourceLast) {
+        destinationChild += 1;
+    }
+    if (destinationChild > rowCount()) {
+        return false;
+    }
+    bool moveOK = beginMoveRows(sourceParent, sourceRow, sourceLast,
+                                destinationParent, destinationChild);
+    if (!moveOK) {
+        return false;
+    }
+
+    OperationFormItem *opForm = opFormList.takeAt(sourceRow);
+    opFormList.insert(destinationChild, opForm);
+
+    endMoveRows();
+    qCDebug(M3GUI) << "moved" << opForm->name() << "from" << sourceRow << "to" << destinationChild;
+    return true;
 }
 
 void OperationFormModel::addOperationForm(OperationFormItem *opForm)
