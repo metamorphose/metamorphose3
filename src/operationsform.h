@@ -27,7 +27,7 @@ private slots:
 
 private:
     void showOperation(const int row);
-    void setActionsEnabled(const bool enable);
+    void setActionsEnabled();
 
     Ui::OperationsForm *ui;
     OperationFormModel *operationFormModel;

@@ -143,7 +143,7 @@ OperationFormItem* OperationFormModel::getOperationAt(int row)
     return opFormList.at(row);
 }
 
-OperationModel* OperationFormModel::getOperations()
+OperationModel* OperationFormModel::getConfiguredOps()
 {
     operations->clear();
     qCDebug(M3GUI) << "Configuring" << opFormList.size() << "operation(s)";

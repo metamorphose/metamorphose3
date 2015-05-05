@@ -67,7 +67,7 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_previewButton_clicked()
 {
-    renamerModel->setOperations(operationFormModel->getOperations());
+    renamerModel->setOperations(operationFormModel->getConfiguredOps());
     int changedCount = renamerModel->applyRenamingOps();
     if (changedCount > 0) {
         ui->renameButton->setEnabled(true);

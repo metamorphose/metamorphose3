@@ -19,15 +19,15 @@ public:
     QString newName(const bool &absolute = false) const;
     bool applyRenameOps(const int &index,
                         OperationModel* operations);
-    bool isNameChanged();
-    bool hasWarning();
-    bool hasError();
+    bool isNameChanged() const;
+    bool hasWarning() const;
+    bool hasError() const;
     static bool itemCompare(RenamerItem *i, RenamerItem *j, Qt::SortOrder order);
     void setOldName(QString name, QString extension);
     void setPath(QString path);
-    QString path();
+    QString path() const;
     void setIsDir(bool isDir);
-    bool isDir();
+    bool isDir() const;
     void setCreated(QDateTime created);
     void setLastModified(QDateTime lastModified);
 

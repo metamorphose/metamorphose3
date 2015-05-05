@@ -22,7 +22,7 @@ void RenamerItem::setPath(QString path)
 /**
  * @return the absolute path of the item.
  */
-QString RenamerItem::path()
+QString RenamerItem::path() const
 {
     return absolutePath;
 }
@@ -32,7 +32,7 @@ void RenamerItem::setIsDir(bool isDir)
     isDirectory = isDir;
 }
 
-bool RenamerItem::isDir()
+bool RenamerItem::isDir() const
 {
     return isDirectory;
 }
@@ -86,17 +86,17 @@ QString RenamerItem::newName(const bool &absolute) const
     return newName;
 }
 
-bool RenamerItem::isNameChanged()
+bool RenamerItem::isNameChanged() const
 {
     return nameChanged;
 }
 
-bool RenamerItem::hasWarning()
+bool RenamerItem::hasWarning() const
 {
     return false;
 }
 
-bool RenamerItem::hasError()
+bool RenamerItem::hasError() const
 {
     return false;
 }

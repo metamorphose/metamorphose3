@@ -39,7 +39,7 @@ signals:
 
 protected:
     QModelIndex parentItem;
-    void addFile(const QFileInfo &fileInfo);
+    bool addFile(const QFileInfo &fileInfo);
     int addDirectory(const QString &path,
                       const bool recursive,
                       const QStringList &nameFilters,

@@ -22,7 +22,7 @@ public:
     void addOperation(OperationItem *operation);
     std::pair<QString, QString> applyOperations(const int &index, std::pair<QString, QString> oldName);
     void clear();
-    bool isEmpty();
+    bool isEmpty() const;
 
 protected:
     QModelIndex parentItem;

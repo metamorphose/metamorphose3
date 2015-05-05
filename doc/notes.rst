@@ -17,8 +17,9 @@ Workflow
 #. Add operations (works on basename and path?):
 
    - insert
-   - remove
-   - cut/copy & paste
+   - replace
+   - move text
+   - modify text
    - adjust length
 
 #. Preview:

@@ -21,11 +21,10 @@ OperationsForm::~OperationsForm()
 
 void OperationsForm::on_addOperation_activated(int index)
 {
+    OperationFormItem *opForm;
     switch (index) {
     case 1: {
-        InsertForm *insertForm = new InsertForm(this);
-        operationFormModel->addOperationForm(insertForm);
-        ui->gridLayout->addWidget(insertForm, 1, 1, 2, ui->gridLayout->columnCount() - 1);
+        opForm = new InsertForm(this);
         break;
     }
     case 2: {
@@ -40,10 +39,18 @@ void OperationsForm::on_addOperation_activated(int index)
     // reset the combo box
     ui->addOperation->setCurrentIndex(0);
 
+    // add the operation
+    operationFormModel->addOperationForm(opForm);
     ui->operationsTable->resizeColumnsToContents();
+
+    int columSpan = ui->gridLayout->columnCount() - 1;
+    int rowSpan = ui->gridLayout->rowCount() - 1;
+    ui->gridLayout->addWidget(opForm, 1, 1, rowSpan, columSpan);
+
+    // show the operation
     int selectedOp = operationFormModel->rowCount() - 1;
     showOperation(selectedOp);
-    setActionsEnabled(true);
+    setActionsEnabled();
 }
 
 void OperationsForm::showOperation(const int row)
@@ -67,9 +74,12 @@ void OperationsForm::on_operationsTable_clicked(const QModelIndex &index)
     qCDebug(M3GUI) << "activated operation at row" << row;
 }
 
-void OperationsForm::setActionsEnabled(const bool enable)
+void OperationsForm::setActionsEnabled()
 {
-    if (enable && operationFormModel->rowCount() > 1) {
+    int opCount = operationFormModel->rowCount();
+    bool enable = opCount > 0;
+
+    if (enable && opCount > 1) {
         ui->moveOpDown->setEnabled(true);
         ui->moveOpUp->setEnabled(true);
     }
@@ -77,10 +87,13 @@ void OperationsForm::setActionsEnabled(const bool enable)
         ui->moveOpDown->setEnabled(false);
         ui->moveOpUp->setEnabled(false);
     }
+    // always enable when there are operations
     ui->deleteOperation->setEnabled(enable);
     ui->applyLabel->setEnabled(enable);
     ui->applyToName->setEnabled(enable);
     ui->applyToExtension->setEnabled(enable);
+
+    // always enable when there are *no* operations
     ui->helpText->setVisible(!enable);
 }
 
@@ -92,11 +105,8 @@ void OperationsForm::on_deleteOperation_activated(const int index)
         int currentRow = ui->operationsTable->currentIndex().row();
         operationFormModel->removeRows(currentRow, 1);
 
-        int opCount = operationFormModel->rowCount();
-        if (opCount < 1) {
-            setActionsEnabled(false);
-        }
-        else {
+        // keeping it simple, just show the first operation
+        if (operationFormModel->rowCount() > 0) {
             showOperation(0);
         }
         break;
@@ -104,7 +114,6 @@ void OperationsForm::on_deleteOperation_activated(const int index)
     // delete all operations
     case 1: {
         operationFormModel->removeRows(0, operationFormModel->rowCount());
-        setActionsEnabled(false);
         break;
     }
     default:
@@ -112,6 +121,7 @@ void OperationsForm::on_deleteOperation_activated(const int index)
     }
     // reset the combo box
     ui->deleteOperation->setCurrentIndex(0);
+    setActionsEnabled();
 }
 
 void OperationsForm::on_applyToName_clicked(bool checked)

@@ -19,24 +19,22 @@ void OperationModel::clear()
     if (!itemsList.isEmpty()) {
         beginResetModel();
         qCDebug(M3CORE) << "Clearing operations...";
-        // don't delete the items on every clear
-        //qDeleteAll(itemsList.begin(), itemsList.end());
         itemsList.clear();
         endResetModel();
     }
 }
 
-bool OperationModel::isEmpty()
+bool OperationModel::isEmpty() const
 {
     return itemsList.isEmpty();
 }
 
-int OperationModel::columnCount(const QModelIndex &parent __attribute__ ((unused))) const
+int OperationModel::columnCount(const QModelIndex &parent) const
 {
     return 2;
 }
 
-int OperationModel::rowCount(const QModelIndex &parent __attribute__ ((unused))) const
+int OperationModel::rowCount(const QModelIndex &parent) const
 {
     return itemsList.size();
 }

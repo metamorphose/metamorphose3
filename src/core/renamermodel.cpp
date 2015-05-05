@@ -137,22 +137,21 @@ void RenamerModel::clearAndDelete()
  */
 int RenamerModel::addFiles(const QStringList &fileList)
 {
-    int startSize = itemsList.size();
     int listSize = fileList.size();
-    int endSize = startSize + listSize;
-
     qCDebug(M3CORE) << "Adding" << listSize << "files...";
-
-    beginInsertRows(parentItem, startSize, endSize - 1);
 
     QElapsedTimer timer;
     timer.start();
 
+    int startSize = itemsList.size();
     for (int i = 0; i < listSize; i++) {
         addFile(QFileInfo(fileList.at(i)));
     }
+    int endSize = itemsList.size();
 
+    beginInsertRows(parentItem, startSize, endSize - 1);
     endInsertRows();
+
     int elapsedTime = timer.elapsed();
     int itemCount = endSize - startSize;
     qCDebug(M3CORE) << "Loaded" << itemCount << "items in" << elapsedTime << "msec";
@@ -161,11 +160,11 @@ int RenamerModel::addFiles(const QStringList &fileList)
     return itemCount;
 }
 
-void RenamerModel::addFile(const QFileInfo &fileInfo)
+bool RenamerModel::addFile(const QFileInfo &fileInfo)
 {
     if (!fileInfo.isWritable()) {
         qCWarning(M3CORE) << "Not writable:" << fileInfo.absoluteFilePath();
-        return;
+        return false;
     }
     RenamerItem *item = new RenamerItem();
     item->setPath(fileInfo.absolutePath());
@@ -174,6 +173,7 @@ void RenamerModel::addFile(const QFileInfo &fileInfo)
     item->setCreated(fileInfo.created());
     item->setLastModified(fileInfo.lastModified());
     itemsList.append(item);
+    return true;
 }
 
 int RenamerModel::addDirectories(const QStringList &directoryList,
@@ -285,7 +285,7 @@ void RenamerModel::setOperations(OperationModel *operationModel)
 int RenamerModel::applyRenamingOps()
 {
     int itemCount = rowCount();
-    if (itemCount == 0) {
+    if (itemCount == 0 || operations->isEmpty()) {
         return 0;
     }
     qCDebug(M3CORE) << "Applying operations on" << itemCount << "items";

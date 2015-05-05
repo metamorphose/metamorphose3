@@ -24,7 +24,7 @@ public:
                   const QModelIndex &destinationParent, int destinationChild) override;
     void addOperationForm(OperationFormItem *opForm);
     OperationFormItem* getOperationAt(int row);
-    OperationModel* getOperations();
+    OperationModel* getConfiguredOps();
     bool isEmpty() const;
     QModelIndex parentItem;
 
