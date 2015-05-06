@@ -4,6 +4,7 @@
 #include <QtCore/QAbstractTableModel>
 #include "renameritem.h"
 
+
 class RenamerModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -21,6 +22,8 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
+    void async_sort(QList<RenamerItem*>::iterator begin, const int length, const int grainsize,
+                    std::function<bool(RenamerItem*, RenamerItem*)> compareFunction);
     int addDirectories(const QStringList &directoryList,
                         const bool &recursive,
                         const QStringList nameFilters,

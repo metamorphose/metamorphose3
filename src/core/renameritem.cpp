@@ -115,7 +115,7 @@ bool RenamerItem::applyRenameOps(const int &index, OperationModel* operations)
     return nameChanged;
 }
 
-bool RenamerItem::itemCompare(RenamerItem *i, RenamerItem *j, Qt::SortOrder order)
+bool RenamerItem::itemCompare(const RenamerItem *i, const RenamerItem *j, Qt::SortOrder order)
 {
     if (i->isDirectory != j->isDirectory) {
         return i->isDirectory;

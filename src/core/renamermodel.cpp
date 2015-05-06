@@ -1,6 +1,7 @@
 #include <QtGui/QIcon>
 #include <QtGui/QBrush>
 #include "renamermodel.h"
+#include <future>
 
 RenamerModel::RenamerModel(QObject *parent)
     : QAbstractTableModel(parent)
@@ -263,11 +264,13 @@ void RenamerModel::sort(int column, Qt::SortOrder order)
     QElapsedTimer timer;
     timer.start();
 
+    int grainsize = std::max(1000, itemCount / 2);
+
     if (order == Qt::AscendingOrder) {
-        std::sort(itemsList.begin(), itemsList.end(), itemCompareAsc);
+        async_sort(itemsList.begin(), itemCount, grainsize, itemCompareAsc);
     }
     else {
-        std::sort(itemsList.begin(), itemsList.end(), itemCompareDesc);
+        async_sort(itemsList.begin(), itemCount, grainsize, itemCompareDesc);
     }
 
     int elapsedTime = timer.elapsed();
@@ -275,6 +278,28 @@ void RenamerModel::sort(int column, Qt::SortOrder order)
     qCDebug(M3CORE) << "Sorted" << itemCount << "items in" << elapsedTime << "msec";
     QString message = QString(tr("Sorted %n item(s)", "", itemCount));
     emit operationCompleted(message);
+}
+
+void RenamerModel::async_sort(QList<RenamerItem*>::iterator begin,
+                              const int length, const int grainsize,
+                              std::function<bool(RenamerItem*, RenamerItem*)> compareFunction)
+{
+    if (length < grainsize) {
+        std::sort(begin, begin + length, compareFunction);
+    }
+    else {
+        int half = length/2;
+        int adjust = length%2;
+        // call async
+        std::future<void> future = std::async(std::launch::async,
+                                              &RenamerModel::async_sort, this,
+                                              begin, half-adjust, grainsize, compareFunction);
+        // call blocking
+        async_sort(begin + half, half+adjust, grainsize, compareFunction);
+        future.wait();
+        // merge as we go along
+        std::inplace_merge(begin, begin + half, begin + length, compareFunction);
+    }
 }
 
 void RenamerModel::setOperations(OperationModel *operationModel)

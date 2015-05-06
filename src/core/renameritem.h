@@ -22,7 +22,8 @@ public:
     bool isNameChanged() const;
     bool hasWarning() const;
     bool hasError() const;
-    static bool itemCompare(RenamerItem *i, RenamerItem *j, Qt::SortOrder order);
+    static bool itemCompare(const RenamerItem *i, const RenamerItem *j,
+                            Qt::SortOrder order);
     void setOldName(QString name, QString extension);
     void setPath(QString path);
     QString path() const;
