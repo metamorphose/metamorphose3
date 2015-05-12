@@ -3,6 +3,7 @@
 
 #include <QtCore/QAbstractTableModel>
 #include "renameritem.h"
+#include <functional>
 
 
 class RenamerModel : public QAbstractTableModel

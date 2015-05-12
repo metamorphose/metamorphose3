@@ -20,7 +20,7 @@ public:
     QString name() override;
 
 private slots:
-    void on_positionSelection_buttonClicked(int id);
+    void positionSelection_buttonClicked(int id);
 
 private:
     Ui::InsertForm *ui;

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>767</width>
-    <height>250</height>
+    <height>207</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -175,11 +175,26 @@
    </item>
    <item row="1" column="1" rowspan="2" colspan="7">
     <widget class="QLabel" name="helpText">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="font">
       <font>
        <weight>75</weight>
        <bold>true</bold>
       </font>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
      </property>
      <property name="text">
       <string>You don't have any operations defined.</string>

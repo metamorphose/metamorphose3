@@ -19,6 +19,12 @@ void InsertOperation::operation(QString &name)
             name.append(parsedText);
         }
         break;
+    case BeforeText:
+        name.replace(textToSearch, parsedText + textToSearch, caseSensitivity);
+        break;
+    case AfterText:
+        name.replace(textToSearch, textToSearch + parsedText, caseSensitivity);
+        break;
     default:
         qCWarning(M3CORE) << "unhandled PositionType";
         break;
@@ -38,4 +44,19 @@ void InsertOperation::setPosition(const int position)
 void InsertOperation::setTextToInsert(const QString text)
 {
     textToInsert = text;
+}
+
+void InsertOperation::setTextToSearch(const QString text)
+{
+    textToSearch = text;
+}
+
+void InsertOperation::setCaseSensitive(const bool isCaseSensitive)
+{
+    if (!isCaseSensitive) {
+        caseSensitivity = Qt::CaseInsensitive;
+    }
+    else {
+        caseSensitivity = Qt::CaseSensitive;
+    }
 }

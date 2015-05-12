@@ -7,92 +7,26 @@
     <x>0</x>
     <y>0</y>
     <width>512</width>
-    <height>98</height>
+    <height>139</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string/>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="0">
-    <widget class="QRadioButton" name="asPrefix">
-     <property name="sizeIncrement">
-      <size>
-       <width>0</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>as a prefix</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-     <attribute name="buttonGroup">
-      <string notr="true">positionSelection</string>
-     </attribute>
-    </widget>
-   </item>
-   <item row="2" column="3">
-    <widget class="QSpinBox" name="position">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>70</width>
-       <height>0</height>
-      </size>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="2">
-    <widget class="QRadioButton" name="atPosition">
-     <property name="text">
-      <string>at this position:</string>
-     </property>
-     <attribute name="buttonGroup">
-      <string notr="true">positionSelection</string>
-     </attribute>
-    </widget>
-   </item>
-   <item row="1" column="0" colspan="5">
-    <widget class="QLineEdit" name="toInsert">
-     <property name="placeholderText">
-      <string>text or sub-operation</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QRadioButton" name="asSuffix">
-     <property name="text">
-      <string>as a suffix</string>
-     </property>
-     <attribute name="buttonGroup">
-      <string notr="true">positionSelection</string>
-     </attribute>
-    </widget>
-   </item>
-   <item row="2" column="4">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="0" column="0">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>2</number>
+   </property>
+   <item>
     <widget class="QLabel" name="label">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -102,6 +36,142 @@
      </property>
      <property name="text">
       <string>Insert this:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="toInsert">
+     <property name="placeholderText">
+      <string>text or sub-operation</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QRadioButton" name="asPrefix">
+       <property name="sizeIncrement">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>as a prefix</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">positionSelection</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="asSuffix">
+       <property name="text">
+        <string>as a suffix</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">positionSelection</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="atPosition">
+       <property name="text">
+        <string>at this position:</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">positionSelection</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="position">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>70</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QRadioButton" name="beforeText">
+       <property name="text">
+        <string>before</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">positionSelection</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="afterText">
+       <property name="text">
+        <string>after</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">positionSelection</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>this text:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="toSearch">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="toolTip">
+        <string>Blank to insert in between all characters</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="caseSensitive">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>case sensitive</string>
      </property>
     </widget>
    </item>
