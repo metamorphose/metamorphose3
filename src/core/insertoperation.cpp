@@ -1,8 +1,11 @@
 #include "insertoperation.h"
 
+/**
+ * Performed for every item in the renamer list.
+ */
 void InsertOperation::operation(QString &name)
 {
-    QString parsedText = parseSubOps(textToInsert);
+    QString parsedText = parseSubOps();
 
     switch (positionType) {
     case Prefix:

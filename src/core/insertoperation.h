@@ -29,7 +29,6 @@ protected:
 private:
     PositionTypes positionType;
     int atPosition;
-    QString textToInsert;
     QString textToSearch;
     Qt::CaseSensitivity caseSensitivity;
 };

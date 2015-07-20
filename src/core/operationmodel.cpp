@@ -96,6 +96,13 @@ void OperationModel::addOperation(OperationItem *operation)
     endInsertRows();
 }
 
+void OperationModel::preProcessOperations()
+{
+    for (OperationItem *op : itemsList) {
+       op->preprocess();
+    }
+}
+
 std::pair<QString, QString> OperationModel::applyOperations(const int &index,
                                                         std::pair<QString, QString> oldName)
 {

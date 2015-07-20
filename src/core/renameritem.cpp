@@ -47,6 +47,9 @@ void RenamerItem::setLastModified(QDateTime lastModified)
     this->lastModified = lastModified;
 }
 
+/**
+ * @return the previous/current (old) name of the item.
+ */
 QString RenamerItem::oldName(const bool &absolute) const
 {
     QString oldName;
@@ -65,6 +68,9 @@ QString RenamerItem::oldName(const bool &absolute) const
     return oldName;
 }
 
+/**
+ * @return the to-be-modified (new) name of the item.
+ */
 QString RenamerItem::newName(const bool &absolute) const
 {
     if (newNameSplit.first.isEmpty()) {

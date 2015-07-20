@@ -317,6 +317,10 @@ int RenamerModel::applyRenamingOps()
     QElapsedTimer timer;
     timer.start();
 
+    // do some pre-processing first...
+    operations->preProcessOperations();
+
+    // ...now do the actual operations
     int changedCount = 0;
     for (int i = 0; i < itemCount; ++i) {
         bool nameChanged = itemsList.at(i)->applyRenameOps(i, operations);

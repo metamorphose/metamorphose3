@@ -15,13 +15,16 @@ public:
     void applyOperation(int itemPosition, std::pair<QString, QString> &name);
     void setApplyToName(const bool apply);
     void setApplyToExtension(const bool apply);
-    QString parseSubOps(const QString text);
+    QString parseSubOps();
+    void preprocess();
     QString numbering();
     QString datetime(const QString format);
 
 protected:
     virtual void operation(QString &name) = 0;
     int itemPosition;
+    QString textToInsert;
+    QStringList parsedTextSegments;
 
 private:
     bool applyToName = true;

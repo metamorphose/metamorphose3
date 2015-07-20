@@ -20,6 +20,7 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     void addOperation(OperationItem *operation);
+    void preProcessOperations();
     std::pair<QString, QString> applyOperations(const int &index, std::pair<QString, QString> oldName);
     void clear();
     bool isEmpty() const;
