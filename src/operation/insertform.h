@@ -21,6 +21,8 @@ public:
 
 private slots:
     void positionSelection_buttonClicked(int id);
+    void toInsert_selectionChanged();
+    void toInsert_textChanged(const QString &arg1);
 
 private:
     Ui::InsertForm *ui;

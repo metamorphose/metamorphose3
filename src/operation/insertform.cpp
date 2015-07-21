@@ -21,6 +21,10 @@ InsertForm::InsertForm(QWidget *parent) :
 
     connect(ui->positionSelection, SIGNAL(buttonClicked(int)),
             this, SLOT(positionSelection_buttonClicked(int)));
+    connect(ui->toInsert, SIGNAL(selectionChanged()),
+            this, SLOT(toInsert_selectionChanged()));
+    connect(ui->toInsert, SIGNAL(textChanged(const QString)),
+            this, SLOT(toInsert_textChanged(const QString)));
 }
 
 InsertForm::~InsertForm()
@@ -85,4 +89,45 @@ void InsertForm::configureOperation()
 QString InsertForm::name()
 {
     return tr("Insert Operation");
+}
+
+void InsertForm::toInsert_selectionChanged()
+{
+    qCDebug(M3GUI) << "selection" << ui->toInsert->selectedText();
+}
+
+void InsertForm::toInsert_textChanged(const QString &arg1)
+{
+    textFormats.clear();
+
+    // first index all subops start & end positions
+    QList<int> indexList;
+    int next = 0;
+    bool first = true;
+    while (next > -1) {
+        // prevents endless loop on finding ":" at first position
+        if (first) {
+            next = arg1.indexOf(":", 0);
+            first = false;
+        }
+        else {
+            next = arg1.indexOf(":", next + 1);
+        }
+        if (next > -1) {
+            indexList << next;
+        }
+    }
+
+    // now create format ranges for each subop
+    for (int i = 0; i < indexList.size(); ++i) {
+        if (i % 2 == 1) {
+            QTextLayout::FormatRange subop;
+            subop.format = defaultSubOpFormat;
+            subop.start = indexList.at(i - 1);
+            subop.length = indexList.at(i) - subop.start + 1;
+            textFormats.append(subop);
+        }
+    }
+
+    setLineEditTextFormat(ui->toInsert);
 }

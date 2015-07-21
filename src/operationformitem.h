@@ -3,6 +3,7 @@
 
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QLineEdit>
+#include <QTextLayout>
 #include "core/operationitem.h"
 #include "suboperationsform.h"
 
@@ -25,6 +26,9 @@ public:
     bool applyToExtension = false;
 
 protected:
+    void setLineEditTextFormat(QLineEdit* lineEdit);
+    QList<QTextLayout::FormatRange> textFormats;
+    QTextCharFormat defaultSubOpFormat;
     SubOperationsForm *subOperationsForm;
     Ui::OperationFormItem *formItemUi;
     QLineEdit *mainInput = 0;
